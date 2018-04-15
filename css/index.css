@@ -1,0 +1,34 @@
+body {
+  background-color: #ddd;
+}
+
+td {
+  width: 75px;
+  height: 75px;
+  box-sizing: border-box;
+}
+
+.peca {
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  background-color: black;
+  position: absolute;
+}
+
+#jogo {
+  margin: 30px;
+  position: relative;
+}
+
+.casa-preta {
+  background-color: white;
+}
+
+.casa-branca {
+  background-color: gray;
+}
+
+.ui-droppable {
+  border: 5px solid yellow;
+}
