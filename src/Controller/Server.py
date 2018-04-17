@@ -1,6 +1,6 @@
 from socket import *
 from ..ctx import codes
-from .Game_Rules import Game_Rules
+from .Message_Handler import Message_Handler
 
 serverPort = 12000
 serverSocket = socket(AF_INET, SOCK_STREAM)
@@ -14,15 +14,7 @@ while 1:
     print("Message Received")
     # message_code = message.code
     message_code = message
-    response_code = codes['error']
-    if message_code == codes['start_game']:
-        game = Game_Rules()
-        response_code = codes['ok']
-    elif message_code == codes['select_piece']:
-        pass
-    elif message_code == codes['exit']:
-        break
-    response = response_code
+    response = Message_Handler(message)
     connectionSocket.send(response)
     connectionSocket.close()
 serverSocket.shutdown()
