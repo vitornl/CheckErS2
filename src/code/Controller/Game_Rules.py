@@ -32,7 +32,12 @@ class Game_Rules:
         pass
 
     def valid_pieces(self) -> list:
-        pass
+        piece_list = self.board.piece_list(self.turn_player)
+        resp = []
+        for piece in piece_list:
+            if self.movable_piece(piece):
+                resp.append(piece.position)
+        return resp
 
     def next_turn(self):
         pass
