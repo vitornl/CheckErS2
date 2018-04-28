@@ -40,4 +40,4 @@ class Game_Rules:
         return resp
 
     def next_turn(self):
-        pass
+        next(self.turn_player)
