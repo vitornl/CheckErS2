@@ -17,7 +17,16 @@ class Game_Rules:
         pass
 
     def movable_piece(self, piece: Piece) -> bool:#private
-        pass
+        for x in [-1, 1]:
+            for y in [-1, 1]:
+                square = self.board.select_square([piece.get_position()[0] + x, piece.get_position()[1] + y])
+                if not square.has_piece():
+                    return True
+                else:
+                    other_piece = self.board.select_piece([piece.get_position()[0] + x, piece.get_position()[1] + y])
+                    if not other_piece.color == piece.color:
+                        return True
+        return False
 
     def valid_moves(self, piece_position: list) -> list:
         pass
