@@ -1,13 +1,13 @@
 from ..ctx import piece_color_1, piece_color_2
 
-def other_piece_color(color: int):
+def other_piece_color(color):
     if color == piece_color_1:
         return piece_color_2
     return piece_color_1
 
 class Piece:
     __slots__ = ('color', 'position', 'evolved')
-    def __init__(self, color: int, position: list):
+    def __init__(self, color, position):
         self.color = color
         self.evolved = False
         self.position = position
@@ -15,8 +15,8 @@ class Piece:
     def evolve(self):
         self.evolved = True
 
-    def get_position(self) -> list:
+    def get_position(self):
         return self.position
 
-    def set_position(self, position: list):
+    def set_position(self, position):
         self.position = position
