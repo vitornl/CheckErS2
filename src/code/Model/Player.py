@@ -1,4 +1,10 @@
+from .piece import Piece
+
 class Player:
-    __slots__ = ('color')
-    def __init__(self, color):
+    def __init__(self, name, color):
+        self.name = name
         self.color = color
+        self.pieces = []
+
+    def set_pieces(self, pieces):
+        self.pieces = pieces

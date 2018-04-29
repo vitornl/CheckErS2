@@ -1,19 +1,11 @@
-from ..ctx import piece_color_1, piece_color_2
-
-def other_piece_color(color):
-    if color == piece_color_1:
-        return piece_color_2
-    return piece_color_1
-
 class Piece:
-    __slots__ = ('color', 'position', 'evolved')
-    def __init__(self, color, position):
-        self.color = color
-        self.evolved = False
-        self.position = position
-
-    def evolve(self):
-        self.evolved = True
+    def __init__(self, player):
+        self.player = player
+        self.is_draughts = False
+        self.position = (None, None)
+    
+    def turn_draughts(self):
+        self.is_draughts = True
 
     def get_position(self):
         return self.position

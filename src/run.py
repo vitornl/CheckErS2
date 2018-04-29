@@ -1,14 +1,10 @@
-from code.Model.Table import Table
-from code.Model.Piece import Piece
+from code.Controller.rules import Rule
+from code.View.display import Display
 
-t = Table()
-
-for i in range(len(t.table[0])):
-    for j in range(len(t.table[0])):
-        try:
-            c = t.select_piece((i, j)).color
-            print(c,end=" ")
-        except:
-            print("0", end=" ")
-
-    print ()
+def main():
+    rules = Rule()
+    Display.print_board(rules.board.board)
+    print()
+    
+if __name__ == "__main__":
+    main()
