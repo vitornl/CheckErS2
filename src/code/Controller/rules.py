@@ -32,9 +32,48 @@ class Rule:
                 k += 1
         players[1].set_pieces(pieces)
 
-    def move_piece(self, piece_position):
-        pass
+    def move_piece(self, piece_position, new_position):
+        piece = self.board.get_piece(piece_position)
+
+        if piece == None:
+            print("Não há peça na casa selecionada!")
+            return
+
+        possible_plays = self.get_possible_plays(piece)
+
+        if new_position in possible_plays:
+            self.board.move_piece(piece, new_position)
+        else:
+            print("Jogada inválida!")
     
+    def get_possible_plays(self, piece):
+        # Aqui as peças só andam para cima, assumindo que o player é o 1
+        # Temos que mudar a função para quando tivermos damas, já que elas vão pode andar
+        # para os dois lados
+        candidate_plays = [(piece.position[0] - 1, piece.position[1] - 1), 
+                           (piece.position[0] + 1, piece.position[1] - 1)]
+
+        possible_plays = []
+
+        for i in range(len(candidate_plays)):
+            if (self.is_play_possible(candidate_plays[i])):
+                possible_plays.append(candidate_plays[i])
+        
+        return possible_plays
+    
+    def is_play_possible(self, candidate_play):
+        # Condições de contorno do tabuleiro
+        if candidate_play[0] < 0 or candidate_play[1] < 0 or candidate_play[0] >= len(self.board.board[0]) or candidate_play[1] >= len(self.board.board):
+            return False
+
+        # Condição de ter peça na casa
+        piece = self.board.get_piece(candidate_play)
+
+        if piece != None:
+            return False
+        
+        return True
+
     '''
     def is_movable(self, board, new_position):
         if(self.orientation == 0 and #north
