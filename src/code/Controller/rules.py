@@ -18,7 +18,7 @@ class Rule:
     def _init_board(self, board, players):
         pieces = [Piece(players[0]) for i in range(12)]
         k = 0
-        for i in range(5, 8):
+        for i in range(0, 3):
             for j in range(0, 7, 2):
                 board.add_piece(pieces[k], (j+i%2, i))
                 k += 1
@@ -26,7 +26,7 @@ class Rule:
 
         pieces = [Piece(players[1]) for i in range(12)]
         k = 0
-        for i in range(0, 3):
+        for i in range(5, 8):
             for j in range(0, 7, 2):
                 board.add_piece(pieces[k], (j+i%2, i))
                 k += 1
