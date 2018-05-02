@@ -67,4 +67,6 @@ class Rule:
         pass
 
     def next_turn(self):
-        pass
+        if self.turn_player is self.players[0]:
+            return self.players[1]
+        return self.players[0]
