@@ -15,9 +15,9 @@ class Board:
         self.board[piece.position[0]][piece.position[1]] = piece
 
     def move_piece(self, piece, position):
-        self._remove_piece(piece)
+        self.remove_piece(piece)
         self.add_piece(piece, position)
 
-    def _remove_piece(self, piece):
+    def remove_piece(self, piece):
         self.board[piece.position[0]][piece.position[1]] = None
         piece.set_position((None, None))
