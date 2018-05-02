@@ -11,8 +11,8 @@ class Board:
         return self.board[position[0]][position[1]]
 
     def add_piece(self, piece, position):
+        self.board[position[0]][position[1]] = piece
         piece.set_position(position)
-        self.board[piece.position[0]][piece.position[1]] = piece
 
     def move_piece(self, piece, position):
         self.remove_piece(piece)
