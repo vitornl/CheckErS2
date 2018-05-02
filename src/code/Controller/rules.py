@@ -82,8 +82,10 @@ class Rule:
             if len(player.pieces) > 0:
                 for piece in player.pieces:
                     if self.movable_piece(piece):
-                        return None
-            return self._other_player(player)
+                        break
+            else: 
+                return self._other_player(player)
+        return None
 
     def next_turn(self):
         self.turn_player = self._other_player(self.turn_player)
