@@ -66,7 +66,18 @@ class Rule:
     def valid_pieces(self):
         pass
 
-    def next_turn(self):
-        if self.turn_player is self.players[0]:
+    def _other_player(self, player)
+        if player is self.players[0]:
             return self.players[1]
         return self.players[0]
+
+    def win_condition(self):
+        for player in self.players:
+            if len(player.pieces) > 0:
+                for piece in player.pieces:
+                    if self.movable_piece(piece):
+                        return None
+            return self._other_player(player)
+            
+    def next_turn(self):
+        self.turn_player = self._other_player(self.turn_player)
