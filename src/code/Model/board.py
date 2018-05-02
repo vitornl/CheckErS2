@@ -7,8 +7,13 @@ class Board:
         
         return board
         
-    def get_piece(self, position):
-        return self.board[position[0]][position[1]]
+    def get_surroundings(self, piece):
+        resp = []
+        x, y = piece.position
+        for i in (-1, 1):
+            for j in (-1, 1):
+                resp.append(self.board[x+i][y+j])
+        return resp
 
     def add_piece(self, piece, position):
         self.board[position[0]][position[1]] = piece
