@@ -66,7 +66,7 @@ class Rule:
     def valid_pieces(self):
         pass
 
-    def _other_player(self, player)
+    def _other_player(self, player):
         if player is self.players[0]:
             return self.players[1]
         return self.players[0]
@@ -78,6 +78,6 @@ class Rule:
                     if self.movable_piece(piece):
                         return None
             return self._other_player(player)
-            
+
     def next_turn(self):
         self.turn_player = self._other_player(self.turn_player)
