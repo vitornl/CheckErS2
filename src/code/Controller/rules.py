@@ -58,8 +58,14 @@ class Rule:
         pass
 
     def movable_piece(self, piece):
-        pass
-
+        neighborhood = self.board.get_surroundings(piece)
+        for neighbor in neighborhood:
+            if neighbor is None:
+                return True
+            if not neighbor.player is piece.player:
+                return True
+        return False
+        
     def valid_moves(self, piece_position):
         pass
 
