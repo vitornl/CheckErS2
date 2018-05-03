@@ -1,25 +1,37 @@
-from code.Controller.rules import Rule
-from code.View.display import Display
+# coding=utf-8
+
+from src.code.Controller.rules import Rule
+from src.code.View.display import Display
+from src.code.Controller.util import Util
+
 
 def main():
     rules = Rule()
-    Display.print_board(rules.board.board)
-    print()
+    Display.print_board_spaced(rules.board, None, None)
 
-    print("Atenção!!! Digitar jogada no formato: coluna_atual linha_atual coluna_nova linha_nova\n")
+    print("Atenção!!! Digitar posições no formato: coluna linha\n")
 
     while (True):
-        text_play = input("Digite a próxima jogada: ")
-        play = Util.string_to_int_list(text_play)
+        possibilities = rules.get_possibilities()
 
-        while (len(play) == 0):
-            text_play = input("Erro na digitação! Digite corretamente a próximada jogada: ")
-            play = Util.string_to_int_list(text_play)
+        piece_position = Util.string_to_int_tuple(input("Digite a peça a ser jogada: "))
+        piece = rules.board.get_piece(piece_position)
 
-        rules.move_piece((play[0], play[1]), (play[2], play[3]))
-        print()
-        Display.print_board(rules.board.board)
-        print()
-    
+        if piece in possibilities.keys():
+            Display.print_board_spaced(rules.board, piece, possibilities)
+
+            movement_position = Util.string_to_int_tuple(input("Digite a posição do movimento da peça: "))
+
+            if (movement_position in possibilities[piece]):
+                rules.move_piece(piece_position, movement_position)
+                print("Jogada realizada com sucesso.")
+            else:
+                print("Movimento impossível.")
+        else:
+            print("Selecione uma peça sua que tenha movimentos possíveis.")
+
+        Display.print_board_spaced(rules.board, None, None)
+
+
 if __name__ == "__main__":
     main()

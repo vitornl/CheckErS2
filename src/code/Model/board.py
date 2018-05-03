@@ -6,7 +6,10 @@ class Board:
         board = [[None] * 8 for i in range(8)]
         
         return board
-        
+
+    def get_piece(self, position):
+        return self.board[position[0]][position[1]]
+
     def get_surroundings(self, piece):
         resp = []
         x, y = piece.position
