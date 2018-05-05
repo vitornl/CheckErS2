@@ -30,6 +30,8 @@ def main():
         else:
             print("Selecione uma peça sua que tenha movimentos possíveis.")
 
+        rules.check_draughts(piece)
+
         Display.print_board_spaced(rules.board, None, None)
 
 

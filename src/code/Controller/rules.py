@@ -13,10 +13,10 @@ class Rule:
         self._init_board(self.board, self.players)
 
     def _set_players(self):
-        p1 = Player('1', 'red')
-        p2 = Player('2', 'blue')
+        p1 = Player('b', 'blue')
+        p2 = Player('r', 'red')
 
-        return (p1, p2), p2
+        return (p1, p2), p1
 
     def _init_board(self, board, players):
         pieces = [Piece(players[0]) for i in range(12)]
@@ -27,13 +27,13 @@ class Rule:
                 k += 1
         players[0].set_pieces(pieces)
 
-        pieces = [Piece(players[1]) for i in range(12)]
+        '''pieces = [Piece(players[1]) for i in range(12)]
         k = 0
         for i in range(5, 8):
             for j in range(0, 7, 2):
                 board.add_piece(pieces[k], (j + (i + 1) % 2, i))
                 k += 1
-        players[1].set_pieces(pieces)
+        players[1].set_pieces(pieces)'''
 
     # Pega possibilidades de jogadas, mapeadas como um dicionário Peça -> Lista de Jogadas
     # A lista de jogada é uma lista de tuplas com posições possíveis
@@ -84,6 +84,15 @@ class Rule:
     def move_piece(self, piece_position, new_position):
         piece = self.board.get_piece(piece_position)
         self.board.move_piece(piece, new_position)
+
+    def check_draughts(self, piece):
+        if piece is not None:
+            if self.turn_player.name == 'b':
+                if piece.get_position()[1] == len(self.board.board) - 1:
+                    piece.turn_draughts()
+            else:
+                if piece.get_position()[1] == 0:
+                    piece.turn_draughts()
 
     '''
     def is_movable(self, board, new_position):
