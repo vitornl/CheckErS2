@@ -27,13 +27,13 @@ class Rule:
                 k += 1
         players[0].set_pieces(pieces)
 
-        '''pieces = [Piece(players[1]) for i in range(12)]
+        pieces = [Piece(players[1]) for i in range(12)]
         k = 0
         for i in range(5, 8):
             for j in range(0, 7, 2):
                 board.add_piece(pieces[k], (j + (i + 1) % 2, i))
                 k += 1
-        players[1].set_pieces(pieces)'''
+        players[1].set_pieces(pieces)
 
     # Pega possibilidades de jogadas, mapeadas como um dicionário Peça -> Lista de Jogadas
     # A lista de jogada é uma lista de tuplas com posições possíveis
