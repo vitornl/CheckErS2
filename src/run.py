@@ -1,8 +1,8 @@
 # coding=utf-8
 
-from code.Controller.rules import Rule
-from code.View.display import Display
-from code.Controller.util import Util
+from src.code.Controller.rules import Rule
+from src.code.View.display import Display
+from src.code.Controller.util import Util
 
 
 def main():
@@ -29,6 +29,8 @@ def main():
                 print("Movimento impossível.")
         else:
             print("Selecione uma peça sua que tenha movimentos possíveis.")
+
+        rules.check_draughts(piece)
 
         Display.print_board_spaced(rules.board, None, None)
 
