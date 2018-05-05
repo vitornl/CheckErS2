@@ -2,7 +2,6 @@
 from ..Model.board import Board
 from ..Model.piece import Piece
 from ..Model.player import Player
-from ..Controller.util import Util
 
 
 class Rule:
@@ -16,7 +15,7 @@ class Rule:
         p1 = Player('b', 'blue')
         p2 = Player('r', 'red')
 
-        return (p1, p2), p1
+        return (p1, p2), p2
 
     def _init_board(self, board, players):
         pieces = [Piece(players[0]) for i in range(12)]
@@ -43,20 +42,28 @@ class Rule:
         for i in range(0, len(self.turn_player.pieces)):
             possible_movements = self.get_possible_movements(self.turn_player.pieces[i])
             if len(possible_movements) != 0:
-                #piece_position_text = Util.int_tuple_to_string(self.turn_player.pieces[i].get_position())
                 possibilities[self.turn_player.pieces[i]] = possible_movements
 
         return possibilities
 
-    # Pega lista de movimentos possíveis para uma peça em particular, dependendo do jogador que está jogando
+    # Pega lista de movimentos possíveis para uma peça em particular, dependendo se é peça normal ou dama
     def get_possible_movements(self, piece):
+        if not piece.is_draughts:
+            possible_movements = self.get_normal_possible_movements(piece)
+        else:
+            possible_movements = self.get_draught_possible_movements(piece)
+
+        return possible_movements
+
+    # Pega movimentos de uma peça normal
+    def get_normal_possible_movements(self, piece):
         possible_movements = []
 
-        if self.turn_player == self.players[1]: # Player 2 jogando
+        if self.turn_player == self.players[1]:  # Player r jogando
             candidate_movements = [(piece.position[0] - 1, piece.position[1] - 1),
                                    (piece.position[0] + 1, piece.position[1] - 1)]
 
-        else: # Player 1 jogando
+        else:  # Player b jogando
             candidate_movements = [(piece.position[0] - 1, piece.position[1] + 1),
                                    (piece.position[0] + 1, piece.position[1] + 1)]
 
@@ -65,6 +72,32 @@ class Rule:
                 possible_movements.append(candidate_movements[i])
 
         return possible_movements
+
+    # Pega movimento de uma dama
+    def get_draught_possible_movements(self, piece):
+        possible_movements = []
+        for i in range(4):
+            candidate_movement = self.get_draught_candidate_movement(piece.get_position(), i)
+
+            while self.is_movement_possible(candidate_movement):
+                possible_movements.append(candidate_movement)
+                candidate_movement = self.get_draught_candidate_movement(candidate_movement, i)
+
+        return possible_movements
+
+    # Pega movimento candidato de dama. Candidato atual é o ponto de partida para o próximo candidato
+    # O índice de iteração decide qual orientação está sendo buscada
+    def get_draught_candidate_movement(self, actual_candidate, index):
+        if index == 0:  # Noroeste
+            candidate_movement = (actual_candidate[0] - 1, actual_candidate[1] - 1)
+        elif index == 1:  # Nordeste
+            candidate_movement = (actual_candidate[0] + 1, actual_candidate[1] - 1)
+        elif index == 2:  # Sudoeste
+            candidate_movement = (actual_candidate[0] - 1, actual_candidate[1] + 1)
+        elif index == 3:  # Sudeste
+            candidate_movement = (actual_candidate[0] + 1, actual_candidate[1] + 1)
+
+        return candidate_movement
 
     # Checa se o movimento é possível, de acordo com as condições de contorno e ocupação de uma casa
     def is_movement_possible(self, candidate_play):
@@ -75,7 +108,6 @@ class Rule:
 
         # Condição de ter peça na casa
         piece = self.board.get_piece(candidate_play)
-
         if piece is not None:
             return False
 
@@ -85,8 +117,9 @@ class Rule:
         piece = self.board.get_piece(piece_position)
         self.board.move_piece(piece, new_position)
 
+    # Checa e executa virada de dama
     def check_draughts(self, piece):
-        if piece is not None:
+        if piece is not None and piece in self.turn_player.pieces and not piece.is_draughts:
             if self.turn_player.name == 'b':
                 if piece.get_position()[1] == len(self.board.board) - 1:
                     piece.turn_draughts()
