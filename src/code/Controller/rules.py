@@ -23,7 +23,7 @@ class Rule:
         k = 0
         for i in range(0, 3):
             for j in range(0, 7, 2):
-                board.add_piece(pieces[k], (j + i % 2, i))
+                board.add_piece(pieces[k], (j + (i + 1) % 2, i))
                 k += 1
         players[0].set_pieces(pieces)
 
@@ -31,7 +31,7 @@ class Rule:
         k = 0
         for i in range(5, 8):
             for j in range(0, 7, 2):
-                board.add_piece(pieces[k], (j + i % 2, i))
+                board.add_piece(pieces[k], (j + (i + 1) % 2, i))
                 k += 1
         players[1].set_pieces(pieces)
 

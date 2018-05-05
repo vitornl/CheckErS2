@@ -1,8 +1,8 @@
 # coding=utf-8
 
-from code.Controller.rules import Rule
-from code.View.display import Display
-from code.Controller.util import Util
+from src.code.Controller.rules import Rule
+from src.code.View.display import Display
+from src.code.Controller.util import Util
 
 
 def main():
