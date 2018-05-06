@@ -1,8 +1,8 @@
 # coding=utf-8
 
-from src.code.Controller.rules import Rule
-from src.code.View.display import Display
-from src.code.Controller.util import Util
+from code.Controller.rules import Rule
+from code.View.display import Display
+from code.Controller.util import Util
 
 
 def main():
@@ -11,7 +11,7 @@ def main():
 
     print("Atenção!!! Digitar posições no formato: coluna linha\n")
 
-    while (True):
+    while (rules.win_condition()):
         possibilities = rules.get_possibilities()
 
         piece_position = Util.string_to_int_tuple(input("Digite a peça a ser jogada: "))
