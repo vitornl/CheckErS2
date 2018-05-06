@@ -1,3 +1,6 @@
+# coding=utf-8
+from ..Model.movement import Movement
+
 class Display:
 
     @staticmethod
@@ -6,10 +9,14 @@ class Display:
             for j in range(len(board.board[0])):
                 # Casos de hover, S para para peça selecionada, X para casa jogável
                 if piece_selected is not None:
+                    possMovs = []
+                    for mov in possibilities[piece_selected]:
+                        possMovs.append(mov.get_position())
+
                     if board.get_piece((j, i)) == piece_selected:
                         print("S", end=" ")
                         continue
-                    elif (j, i) in possibilities[piece_selected]:
+                    elif (j, i) in possMovs:
                         print('X', end=" ")
                         continue
 
