@@ -1,8 +1,8 @@
 # coding=utf-8
 
-from src.code.Controller.rules import Rule
-from src.code.View.display import Display
-from src.code.Controller.util import Util
+from code.Controller.rules import Rule
+from code.View.display import Display
+from code.Controller.util import Util
 
 
 def main():
@@ -21,10 +21,19 @@ def main():
             Display.print_board_spaced(rules.board, piece, possibilities)
 
             movement_position = Util.string_to_int_tuple(input("Digite a posição do movimento da peça: "))
+            movement = None
 
-            if (movement_position in possibilities[piece]):
-                rules.move_piece(piece_position, movement_position)
+            for mov in possibilities[piece]:
+                if mov.get_position() == movement_position:
+                    #Se entrou aqui significa que achou um movimento possível com aquela posição
+                    movement = mov
+                    break
+
+            if movement != None:
+                rules.move_piece(piece_position, movement)
+                rules.next_turn()
                 print("Jogada realizada com sucesso.")
+            
             else:
                 print("Movimento impossível.")
         else:
@@ -34,6 +43,7 @@ def main():
 
         Display.print_board_spaced(rules.board, None, None)
 
+        
 
 if __name__ == "__main__":
     main()
