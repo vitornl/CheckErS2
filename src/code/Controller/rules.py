@@ -2,7 +2,7 @@
 from ..Model.board import Board
 from ..Model.piece import Piece
 from ..Model.player import Player
-
+from ..Model.movement import Movement
 
 class Rule:
 
@@ -10,6 +10,7 @@ class Rule:
         self.board = Board()
         self.players, self.turn_player = self._set_players()
         self._init_board(self.board, self.players)
+        
 
     def _set_players(self):
         p1 = Player('b', 'blue')
@@ -45,35 +46,68 @@ class Rule:
         for i in range(0, len(player.pieces)):
             possible_movements = self.get_possible_movements(player.pieces[i])
             if len(possible_movements) != 0:
-                possibilities[player.pieces[i]] = possible_movements
-
+                possibilities[self.turn_player.pieces[i]] = possible_movements
         return possibilities
 
     # Pega lista de movimentos possíveis para uma peça em particular, dependendo se é peça normal ou dama
     def get_possible_movements(self, piece):
         if not piece.is_draughts:
             possible_movements = self.get_normal_possible_movements(piece)
-        else:
-            possible_movements = self.get_draught_possible_movements(piece)
+        #else:
+            #possible_movements = self.get_draught_possible_movements(piece)
 
         return possible_movements
 
     # Pega movimentos de uma peça normal
     def get_normal_possible_movements(self, piece):
         possible_movements = []
-
+        
         if self.turn_player == self.players[1]:  # Player r jogando
-            candidate_movements = [(piece.position[0] - 1, piece.position[1] - 1),
-                                   (piece.position[0] + 1, piece.position[1] - 1)]
+            candidate_mov_1 = Movement((piece.position[0] - 1, piece.position[1] - 1), None)
+            candidate_mov_2 = Movement((piece.position[0] + 1, piece.position[1] - 1), None)
 
+            #Caso o movimento não seja possível por conta de uma peça adversária,
+            #é necessário ver possibilidade de pular sobre peça
+            
+            if not self.is_movement_possible(candidate_mov_1): 
+                possiblePiece = self.board.get_piece(candidate_mov_1.get_position())
+                if possiblePiece != None:
+                    if possiblePiece.player != self.players[1]:
+                        candidate_mov_1 = Movement((piece.position[0] - 2, piece.position[1] - 2)
+                                    ,candidate_mov_1.get_position())
+
+                
+
+            if not self.is_movement_possible(candidate_mov_2):
+                possiblePiece = self.board.get_piece(candidate_mov_2.get_position())
+                if possiblePiece != None:
+                    if possiblePiece.player != self.players[1]:
+                        candidate_mov_2 = Movement((piece.position[0] + 2, piece.position[1] - 2)
+                                            ,candidate_mov_2.get_position())
+            
         else:  # Player b jogando
-            candidate_movements = [(piece.position[0] - 1, piece.position[1] + 1),
-                                   (piece.position[0] + 1, piece.position[1] + 1)]
+            
+            candidate_mov_1 = Movement((piece.position[0] - 1, piece.position[1] + 1), None)
+            candidate_mov_2 = Movement((piece.position[0] + 1, piece.position[1] + 1), None)
 
-        for i in range(len(candidate_movements)):
-            if self.is_movement_possible(candidate_movements[i]):
-                possible_movements.append(candidate_movements[i])
+            if not self.is_movement_possible(candidate_mov_1):
+                possiblePiece = self.board.get_piece(candidate_mov_1.get_position())
+                if possiblePiece != None:
+                    if possiblePiece.player != self.players[0]:
+                        candidate_mov_1 = Movement((piece.position[0] - 2, piece.position[1] + 2),
+                                                    candidate_mov_1.get_position())
 
+            if not self.is_movement_possible(candidate_mov_2): 
+                possiblePiece = self.board.get_piece(candidate_mov_2.get_position())
+                if possiblePiece != None:
+                    if possiblePiece.player != self.players[0]:
+                        candidate_mov_2 = Movement((piece.position[0] + 2, piece.position[1] + 2),
+                                                    candidate_mov_2.get_position())
+
+        for movement in {candidate_mov_1, candidate_mov_2}:
+            if self.is_movement_possible(movement):
+                possible_movements.append(movement)
+        
         return possible_movements
 
     # Pega movimento de uma dama
@@ -103,12 +137,14 @@ class Rule:
         return candidate_movement
 
     # Checa se o movimento é possível, de acordo com as condições de contorno e ocupação de uma casa
-    def is_movement_possible(self, candidate_play):
+    def is_movement_possible(self, possible_move):
+
+        candidate_play = possible_move.get_position()
+
         # Condições de contorno do tabuleiro
         if candidate_play[0] < 0 or candidate_play[1] < 0 or candidate_play[0] >= len(self.board.board[0]) or \
                 candidate_play[1] >= len(self.board.board):
             return False
-
         # Condição de ter peça na casa
         piece = self.board.get_piece(candidate_play)
         if piece is not None:
@@ -116,9 +152,14 @@ class Rule:
 
         return True
 
-    def move_piece(self, piece_position, new_position):
+    def move_piece(self, piece_position, movement):
         piece = self.board.get_piece(piece_position)
-        self.board.move_piece(piece, new_position)
+        old_position = piece.get_position()
+        self.board.move_piece(piece, movement.get_position())
+        self.turn_player.move_piece(old_position, movement.get_position())
+        #Verifica se alguma peça foi eliminada
+        if movement.get_location_eliminated_piece() != None:
+            self.eat_piece(movement)
 
     # Checa e executa virada de dama
     def check_draughts(self, piece):
@@ -148,9 +189,27 @@ class Rule:
         
         return True
     '''
-
-    def eat_piece(self):
-        pass
+    
+    def eat_piece(self, movement):
+        piece = self.board.get_piece(movement.get_location_eliminated_piece())
+        old_position = piece.get_position()
+        self.board.remove_piece(piece)
+        if self.turn_player == self.players[0]:
+            player = self.players[1]
+        else:
+            player = self.players[0]
+        player.remove_piece(old_position)
+    
+    '''
+    def movable_piece(self, piece):
+        neighborhood = self.board.get_surroundings(piece)
+        for neighbor in neighborhood:
+            if neighbor is None:
+                return True
+            if not neighbor.player is piece.player:
+                return True
+        return False
+    '''
 
     def valid_moves(self, piece_position):
         pass

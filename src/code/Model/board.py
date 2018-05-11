@@ -8,6 +8,8 @@ class Board:
         return board
 
     def get_piece(self, position):
+        if position[0]<0 or position[0]>7 or position[1]<0 or position[1]>7:
+            return None
         return self.board[position[0]][position[1]]
 
     def get_surroundings(self, piece):
