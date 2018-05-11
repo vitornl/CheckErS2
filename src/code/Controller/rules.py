@@ -37,11 +37,14 @@ class Rule:
 
     # Pega possibilidades de jogadas, mapeadas como um dicionário Peça -> Lista de Jogadas
     # A lista de jogada é uma lista de tuplas com posições possíveis
-    def get_possibilities(self):
+    def get_possibilities(self, player = None):
+        if player is None:
+            player = self.turn_player
+
         possibilities = {}
 
-        for i in range(0, len(self.turn_player.pieces)):
-            possible_movements = self.get_possible_movements(self.turn_player.pieces[i])
+        for i in range(0, len(player.pieces)):
+            possible_movements = self.get_possible_movements(player.pieces[i])
             if len(possible_movements) != 0:
                 possibilities[self.turn_player.pieces[i]] = possible_movements
         return possibilities
@@ -186,7 +189,7 @@ class Rule:
         
         return True
     '''
-
+    
     def eat_piece(self, movement):
         piece = self.board.get_piece(movement.get_location_eliminated_piece())
         old_position = piece.get_position()
@@ -221,10 +224,15 @@ class Rule:
 
     def win_condition(self):
         for player in self.players:
+            possibilities = self.get_possibilities(player)
             if len(player.pieces) > 0:
+                aux = 0
                 for piece in player.pieces:
-                    if self.movable_piece(piece):
+                    aux += 1
+                    if possibilities.__contains__(piece):
                         break
+                if aux == len(player.pieces):
+                    return self._other_player(player)
             else:
                 return self._other_player(player)
         return None

@@ -11,7 +11,7 @@ def main():
 
     print("Atenção!!! Digitar posições no formato: coluna linha\n")
 
-    while (True):
+    while (rules.win_condition()):
         possibilities = rules.get_possibilities()
 
         piece_position = Util.string_to_int_tuple(input("Digite a peça a ser jogada: "))
