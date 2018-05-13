@@ -1,3 +1,5 @@
+from ..Model.board import Board
+
 class Piece:
     def __init__(self, player):
         self.player = player
