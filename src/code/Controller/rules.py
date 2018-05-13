@@ -9,8 +9,7 @@ class Rule:
     def __init__(self):
         self.board = Board()
         self.players, self.turn_player = self._set_players()
-        self._init_board(self.board, self.players)
-        
+        self._init_board(self.board, self.players)      
 
     def _set_players(self):
         p1 = Player('b', 'blue')
@@ -35,31 +34,56 @@ class Rule:
                 k += 1
         players[1].set_pieces(pieces)
 
+    def _get_possible_eleminations(self, piece):
+        eatable = []
+        for p_piece in self.board.get_piece_surroundings(piece):
+            if type(p_piece) == Piece and p_piece.player != self.turn_player:
+                if p_piece.get_position()[0] < piece.get_position()[0]:
+                    if p_piece.get_position()[1] < piece.get_position()[1]:
+                        eatable.append(Movement((piece.position[0] - 2, piece.position[1] - 2), \
+                        p_piece.get_position()))
+                    else:
+                        eatable.append(Movement((piece.position[0] - 2, piece.position[1] + 2), \
+                        p_piece.get_position()))
+                else:
+                    if p_piece.get_position()[1] < piece.get_position()[1]:
+                        eatable.append(Movement((piece.position[0] + 2, piece.position[1] - 2), \
+                        p_piece.get_position()))
+                    else:
+                        eatable.append(Movement((piece.position[0] + 2, piece.position[1] + 2), \
+                        p_piece.get_position()))
+        for m_eating in eatable:
+            if not self.is_movement_possible(m_eating):
+                eatable.remove(m_eating)
+            else: print(m_eating.get_position())
+
+        return eatable
+
     # Pega possibilidades de jogadas, mapeadas como um dicionário Peça -> Lista de Jogadas
-    # A lista de jogada é uma lista de tuplas com posições possíveis
-    def get_possibilities(self, player = None):
-        if player is None:
-            player = self.turn_player
-
-        possibilities = {}
-
-        for i in range(0, len(player.pieces)):
-            possible_movements = self.get_possible_movements(player.pieces[i])
-            if len(possible_movements) != 0:
-                possibilities[self.turn_player.pieces[i]] = possible_movements
-        return possibilities
+    # A lista de jogada é uma lista de tuplas com posições possíveis   
+    def get_all_possible_moves(self, player):
+        moves = {}
+        eatable = {}
+        for piece in player.pieces:
+            p_eatable = self._get_possible_eleminations(piece)
+            if p_eatable: eatable[piece] = p_eatable
+            p_moves = self._get_piece_moves(piece)
+            if p_moves: moves[piece] = p_moves
+        
+        if eatable: return eatable
+        return moves
 
     # Pega lista de movimentos possíveis para uma peça em particular, dependendo se é peça normal ou dama
-    def get_possible_movements(self, piece):
+    def _get_piece_moves(self, piece):
         if not piece.is_draughts:
-            possible_movements = self.get_normal_possible_movements(piece)
+            possible_movements = self._get_normal_moves(piece)
         #else:
-            #possible_movements = self.get_draught_possible_movements(piece)
+            #possible_movements = self._get_draught_moves(piece)
 
         return possible_movements
 
     # Pega movimentos de uma peça normal
-    def get_normal_possible_movements(self, piece):
+    def _get_normal_moves(self, piece):
         possible_movements = []
         
         if self.turn_player == self.players[1]:  # Player r jogando
@@ -74,9 +98,7 @@ class Rule:
                 if possiblePiece != None:
                     if possiblePiece.player != self.players[1]:
                         candidate_mov_1 = Movement((piece.position[0] - 2, piece.position[1] - 2)
-                                    ,candidate_mov_1.get_position())
-
-                
+                                    ,candidate_mov_1.get_position())         
 
             if not self.is_movement_possible(candidate_mov_2):
                 possiblePiece = self.board.get_piece(candidate_mov_2.get_position())
@@ -104,14 +126,14 @@ class Rule:
                         candidate_mov_2 = Movement((piece.position[0] + 2, piece.position[1] + 2),
                                                     candidate_mov_2.get_position())
 
-        for movement in {candidate_mov_1, candidate_mov_2}:
+        for movement in [candidate_mov_1, candidate_mov_2]:
             if self.is_movement_possible(movement):
                 possible_movements.append(movement)
         
         return possible_movements
 
     # Pega movimento de uma dama
-    def get_draught_possible_movements(self, piece):
+    def _get_draught_moves(self, piece):
         possible_movements = []
         for i in range(4):
             candidate_movement = self.get_draught_candidate_movement(piece.get_position(), i)
@@ -152,10 +174,9 @@ class Rule:
 
         return True
 
-    def move_piece(self, piece_position, movement):
-        piece = self.board.get_piece(piece_position)
-        old_position = piece.get_position()
-        self.board.move_piece(piece, movement.get_position())
+    def move_piece(self, selected_piece, movement):
+        old_position = selected_piece.get_position()
+        self.board.move_piece(selected_piece, movement.get_position())
         self.turn_player.move_piece(old_position, movement.get_position())
         #Verifica se alguma peça foi eliminada
         if movement.get_location_eliminated_piece() != None:
@@ -224,7 +245,7 @@ class Rule:
 
     def win_condition(self):
         for player in self.players:
-            possibilities = self.get_possibilities(player)
+            possibilities = self.get_all_possible_moves(self.turn_player)
             if len(player.pieces) > 0:
                 aux = 0
                 for piece in player.pieces:

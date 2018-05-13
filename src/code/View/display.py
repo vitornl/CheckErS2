@@ -5,7 +5,12 @@ class Display:
 
     @staticmethod
     def print_board(board, piece_selected, possibilities):
+        print(" ", end=" ")
+        for i in range(len(board.board[0])): #header
+            print(i, end=" ")
+        print("")
         for i in range(len(board.board[0])):
+            print(i, end=" ")
             for j in range(len(board.board[0])):
                 # Casos de hover, S para para peça selecionada, X para casa jogável
                 if piece_selected is not None:

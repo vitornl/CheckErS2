@@ -13,4 +13,4 @@ class Movement:
         return self.location_eliminated_piece
 
     def set_location_eliminated_piece(self, location_piece):
-        self.location_eliminated_piece = piece
+        self.location_eliminated_piece = location_piece

@@ -12,14 +12,14 @@ def main():
     print("Atenção!!! Digitar posições no formato: coluna linha\n")
 
     while (rules.win_condition()):
-        possibilities = rules.get_possibilities()
-
+        possibilities = rules.get_all_possible_moves(rules.turn_player)
         piece_position = Util.string_to_int_tuple(input("Digite a peça a ser jogada: "))
         piece = rules.board.get_piece(piece_position)
-
         if piece in possibilities.keys():
+            for p in possibilities[piece]:
+                print(p.get_position())
             Display.print_board_spaced(rules.board, piece, possibilities)
-
+        
             movement_position = Util.string_to_int_tuple(input("Digite a posição do movimento da peça: "))
             movement = None
 
@@ -30,7 +30,7 @@ def main():
                     break
 
             if movement != None:
-                rules.move_piece(piece_position, movement)
+                rules.move_piece(piece, movement)
                 rules.next_turn()
                 print("Jogada realizada com sucesso.")
             
@@ -41,9 +41,7 @@ def main():
 
         rules.check_draughts(piece)
 
-        Display.print_board_spaced(rules.board, None, None)
-
-        
+        Display.print_board_spaced(rules.board, None, None)     
 
 if __name__ == "__main__":
     main()
