@@ -115,10 +115,10 @@ class Rule:
     def _get_draught_moves(self, piece):
         possible_movements = []
         for i in range(4):
-            candidate_movement = self.get_draught_candidate_movement(piece.get_position(), i)
+            candidate_movement = Movement(self.get_draught_candidate_movement(piece.get_position(), i), None)
             while self.is_movement_possible(candidate_movement):
                 possible_movements.append(candidate_movement)
-                candidate_movement = self.get_draught_candidate_movement(candidate_movement, i)
+                candidate_movement = Movement(self.get_draught_candidate_movement(piece.get_position(), i), None)
         return possible_movements
 
     # Pega movimento candidato de dama. Candidato atual é o ponto de partida para o próximo candidato
