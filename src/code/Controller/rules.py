@@ -174,13 +174,8 @@ class Rule:
 
         return True
 
-    def move_piece(self, selected_piece, movement):
-        old_position = selected_piece.get_position()
-        self.board.move_piece(selected_piece, movement.get_position())
-        self.turn_player.move_piece(old_position, movement.get_position())
-        #Verifica se alguma peça foi eliminada
-        if movement.get_location_eliminated_piece() != None:
-            self.eat_piece(movement)
+    def move_piece(self, selected_piece, position):
+        self.board.move_piece(selected_piece, position)
 
     # Checa e executa virada de dama
     def check_draughts(self, piece):
