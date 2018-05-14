@@ -12,8 +12,8 @@ class Rule:
         self._init_board(self.board, self.players)      
 
     def _set_players(self):
-        p1 = Player('b', 'blue')
-        p2 = Player('r', 'red')
+        p1 = Player('b', -1)
+        p2 = Player('r', 1)
 
         return (p1, p2), p2
 
