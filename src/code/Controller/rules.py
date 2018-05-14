@@ -59,11 +59,11 @@ class Rule:
 
         return eatable
 
-    def priority_insert(eat_list, movement):
+    def priority_insert(self, eat_list, movement):
         if len(eat_list) == 0:
             eat_list.append(movement)
         else:
-            eat = eat_list[0]:
+            eat = eat_list[0]
             if len(eat.get_eliminateds()) <= len(movement.get_eliminateds()):
                 if len(eat.get_eliminateds()) < len(movement.get_eliminateds()):
                     eat_list = []
@@ -78,7 +78,7 @@ class Rule:
         walk = []
         eat = []
         for piece in player.pieces:
-            piece_movement = build_movement(piece)
+            piece_movement = self.build_movement(piece)
             if len(piece_movement) > 0: resp[piece] = []
             for mov in piece_movement:
                 if len(mov.get_eliminateds()) > 0:
