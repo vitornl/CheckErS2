@@ -34,7 +34,7 @@ class Rule:
                 k += 1
         players[1].set_pieces(pieces)
 
-    def _get_possible_eleminations(self, piece):
+    def _get_possible_eliminations(self, piece):
         eatable = []
         for p_piece in self.board.get_piece_surroundings(piece):
             if type(p_piece) == Piece and p_piece.player != self.turn_player:
@@ -59,19 +59,42 @@ class Rule:
 
         return eatable
 
+    def priority_insert(eat_list, movement):
+        if len(eat_list) == 0:
+            eat_list.append(movement)
+        else:
+            eat = eat_list[0]:
+            if len(eat.get_eliminateds()) <= len(movement.get_eliminateds()):
+                if len(eat.get_eliminateds()) < len(movement.get_eliminateds()):
+                    eat_list = []
+                eat_list.append(movement)
+        return eat_list
+            
+
     # Pega possibilidades de jogadas, mapeadas como um dicionário Peça -> Lista de Jogadas
     # A lista de jogada é uma lista de tuplas com posições possíveis   
     def get_all_possible_moves(self, player):
-        moves = {}
-        eatable = {}
+        resp = {}
+        walk = []
+        eat = []
         for piece in player.pieces:
-            p_eatable = self._get_possible_eleminations(piece)
-            if p_eatable: eatable[piece] = p_eatable
-            p_moves = self._get_piece_moves(piece)
-            if p_moves: moves[piece] = p_moves
+            piece_movement = build_movement(piece)
+            if len(piece_movement) > 0: resp[piece] = []
+            for mov in piece_movement:
+                if len(mov.get_eliminateds()) > 0:
+                    eat = self.priority_insert(eat, mov)
+                else:
+                    walk.append(mov)
         
-        if eatable: return eatable
-        return moves
+        if len(eat) > 0:
+            for mov in eat:
+                resp[mov.get_piece()].append(mov)
+        elif len(walk) > 0:
+            for mov in walk:
+                resp[mov.get_piece()].append(mov)
+        if len(resp) == 0:
+            return None
+        return resp
 
     # Pega lista de movimentos possíveis para uma peça em particular, dependendo se é peça normal ou dama
     def _get_piece_moves(self, piece):
