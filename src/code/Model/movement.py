@@ -36,9 +36,18 @@ class Movement:
 
             Returns
             -------
-            The destiny position
+            The destiny position or None
         """
-        return self.destiny.pop()
+        if len(self.destiny)==0:
+            return None
+        else:
+            return self.destiny[0]
+
+    def next_movement(self):
+        """
+            Remove the first movement
+        """
+        self.destiny.remove(self.destiny[0])
 
     def get_eliminateds(self):
         """
