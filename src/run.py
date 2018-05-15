@@ -17,16 +17,13 @@ def main():
         piece_position = Util.string_to_int_tuple(input("Digite a peça a ser jogada: "))
         piece = rules.board.get_piece(piece_position)
         if piece in possibilities.keys() and len(possibilities[piece]) != 0:
-            # for p in possibilities[piece]:
-            #     print(p.get_position())
-            # Display.print_board_spaced(rules.board, piece, possibilities)
 
             path = possibilities[piece]
-            movement = []
 
             while len(path) != 0:
+                movement = []
                 while len(movement) == 0:
-                    Display.print_board_spaced(rules.board, piece, possibilities)
+                    Display.print_board_spaced(rules.board, piece, path)
                 
                     movement_position = Util.string_to_int_tuple(input("Digite a posição do movimento da peça: "))
 
@@ -38,9 +35,11 @@ def main():
                     if len(movement) == 0:
                         print("Posição inválida.")
                 rules.move_piece(piece, movement_position)
+
                 for mov in movement:
                     mov.next_movement()
-                if len(movement) == 1 and movement[0].get_movement() == None:
+                
+                if (len(movement) == 1) and (movement[0].get_movement() == None):
                     path = []
                     rules.eat_pieces(movement[0])
                     rules.check_draughts(piece)

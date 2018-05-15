@@ -83,7 +83,7 @@ class Movement:
         """
             Remove the first movement
         """
-        self.destiny.remove(self.destiny[0])
+        self.destiny.pop(0)
 
     def get_eliminateds(self):
         """
