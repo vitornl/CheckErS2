@@ -20,6 +20,16 @@ class Movement:
         self.destiny.append(destiny)
         self.eliminated = []
 
+    def copy_movement(self):
+        resp = Movement(self.piece, self.destiny[0])
+        dest = self.destiny[1:]
+        for pos in dest:
+            resp.add_destiny(pos)
+        for piece in self.eliminated:
+            resp.add_elimination(piece)
+        return resp
+
+
     def get_piece(self):
         """
             Getter for piece
@@ -59,7 +69,17 @@ class Movement:
         """
         return self.eliminated
 
-    def add_new_destiny(self, location):
+    def check_destiny(self, location):
+        if location in self.destiny:
+            return True
+        return False
+    
+    def check_elimination(self, piece):
+        if piece in self.eliminated:
+            return True
+        return False
+
+    def add_destiny(self, location):
         """
             Add a new destiny for the piece
 
@@ -71,12 +91,9 @@ class Movement:
             -------
             Bool meaning if is a new position or not
         """
-        if location in self.destiny:
-            return False
         self.destiny.append(location)
-        return True
 
-    def add_new_elimination(self, piece):
+    def add_elimination(self, piece):
         """
             Add a new eliminated piece
 
