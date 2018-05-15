@@ -32,7 +32,7 @@ class Display:
                     else:
                         print(str.capitalize(board.board[j][i].player.name), end=" ")
                 else:
-                    print("0", end=" ")
+                    print("_", end=" ")
 
             print()
 

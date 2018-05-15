@@ -14,6 +14,7 @@ def main():
         Display.print_board_spaced(rules.board, None, None)
 
         possibilities = rules.get_all_possible_moves(rules.turn_player)
+        print("--- TURNO: Jogador {} ---".format(rules.turn_player.name))
         piece_position = Util.string_to_int_tuple(input("Digite a peça a ser jogada: "))
         piece = rules.board.get_piece(piece_position)
         if piece in possibilities.keys() and len(possibilities[piece]) != 0:
