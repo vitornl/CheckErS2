@@ -393,15 +393,11 @@ class Rule:
         return True
     '''
     
-    def eat_piece(self, movement):
-        piece = self.board.get_piece(movement.get_location_eliminated_piece())
-        old_position = piece.get_position()
-        self.board.remove_piece(piece)
-        if self.turn_player == self.players[0]:
-            player = self.players[1]
-        else:
-            player = self.players[0]
-        player.remove_piece(old_position)
+    def eat_pieces(self, movement):
+        eat_list = movement.get_eliminateds()
+        for piece in eat_list:
+            self.board.remove_piece(piece)
+            piece.player.remove_piece(piece)
     
     '''
     def movable_piece(self, piece):
