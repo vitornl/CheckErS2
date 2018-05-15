@@ -1,9 +1,9 @@
 from .piece import Piece
 
 class Player:
-    def __init__(self, name, color):
+    def __init__(self, name, side):
         self.name = name
-        self.color = color
+        self.side = side
         self.pieces = []
 
     def set_pieces(self, pieces):
