@@ -12,23 +12,16 @@ class Board:
             return None
         return self.board[position[0]][position[1]]
 
-    def get_surroundings(self, piece):
-        resp = []
-        x, y = piece.position
-        for i in (-1, 1):
-            for j in (-1, 1):
-                resp.append(self.board[x+i][y+j])
-        return resp
-
     def get_piece_surroundings(self, piece):
         resp = []
+        
         x, y = piece.position
         if x > 0 and y > 0:
             resp.append(self.board[x-1][y-1])
         if x < 7 and y > 0:
             resp.append(self.board[x+1][y-1])
-        if y > 0 and x > 0:
-            resp.append(self.board[x-1][y-1])
+        if x > 0 and y < 7:
+            resp.append(self.board[x-1][y+1])
         if x < 7 and y < 7:
             resp.append(self.board[x+1][y+1])
         

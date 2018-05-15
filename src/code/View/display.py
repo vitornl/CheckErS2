@@ -4,7 +4,7 @@ from ..Model.movement import Movement
 class Display:
 
     @staticmethod
-    def print_board(board, piece_selected, possibilities):
+    def print_board(board, piece_selected, movement):
         print(" ", end=" ")
         for i in range(len(board.board[0])): #header
             print(i, end=" ")
@@ -15,8 +15,8 @@ class Display:
                 # Casos de hover, S para para peça selecionada, X para casa jogável
                 if piece_selected is not None:
                     possMovs = []
-                    for mov in possibilities[piece_selected]:
-                        possMovs.append(mov.get_position())
+                    for mov in movement:
+                        possMovs.append(mov.get_movement())
 
                     if board.get_piece((j, i)) == piece_selected:
                         print("S", end=" ")
