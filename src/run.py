@@ -16,7 +16,7 @@ def main():
         possibilities = rules.get_all_possible_moves(rules.turn_player)
         piece_position = Util.string_to_int_tuple(input("Digite a peça a ser jogada: "))
         piece = rules.board.get_piece(piece_position)
-        if piece in possibilities.keys():
+        if piece in possibilities.keys() and len(possibilities[piece]) != 0:
             # for p in possibilities[piece]:
             #     print(p.get_position())
             # Display.print_board_spaced(rules.board, piece, possibilities)
@@ -42,6 +42,8 @@ def main():
                     mov.next_movement()
                 if len(movement) == 1 and movement[0].get_movement() == None:
                     path = []
+                    rules.eat_pieces(movement[0])
+                    rules.check_draughts(piece)
                     rules.next_turn()
                     print("Jogada realizada com sucesso.")
                 else:
