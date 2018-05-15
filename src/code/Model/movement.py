@@ -1,6 +1,12 @@
 class Movement:
     """
         Class that deals with the movement routing
+
+        Parameters
+        ----------
+        piece: piece in movement
+        destiny: the list of position of the piece
+        eliminated: the list of pieces jumped, that is going to be removed
     """
     def __init__(self, piece, destiny):
         """
@@ -21,6 +27,13 @@ class Movement:
         self.eliminated = []
 
     def copy_movement(self):
+        """
+            Copy a movement to a new object
+
+            Returns
+            -------
+            A new Movement class object
+        """
         resp = Movement(self.piece, self.destiny[0])
         dest = self.destiny[1:]
         for pos in dest:
@@ -53,6 +66,19 @@ class Movement:
         else:
             return tuple(self.destiny[0])
 
+    def get_last_movement(self):
+        """
+            Getter for last movement
+
+            Returns
+            -------
+            The destiny position or None
+        """
+        if len(self.destiny)==0:
+            return None
+        else:
+            return tuple(self.destiny[-1])
+
     def next_movement(self):
         """
             Remove the first movement
@@ -70,11 +96,35 @@ class Movement:
         return self.eliminated
 
     def check_destiny(self, location):
+        """
+            Checks if a position is already in the list
+
+            Parameters
+            ----------
+            location: the location to be evaluated
+
+            Returns
+            -------
+            True: Element in the list
+            False: New element
+        """
         if location in self.destiny:
             return True
         return False
     
     def check_elimination(self, piece):
+        """
+            Checks if a piece is already in the list
+
+            Parameters
+            ----------
+            piece: the piece to be evaluated
+
+            Returns
+            -------
+            True: Element in the list
+            False: New element
+        """
         if piece in self.eliminated:
             return True
         return False
@@ -86,10 +136,6 @@ class Movement:
             Parameters
             ----------
             location: New position of the piece
-
-            Returns
-            -------
-            Bool meaning if is a new position or not
         """
         self.destiny.append(location)
 
