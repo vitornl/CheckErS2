@@ -26,7 +26,7 @@ def main():
 
             while len(path) != 0:
                 while len(movement) == 0:
-                    Display.print_board_spaced(rules.board, piece, None)
+                    Display.print_board_spaced(rules.board, piece, possibilities)
                 
                     movement_position = Util.string_to_int_tuple(input("Digite a posição do movimento da peça: "))
 
@@ -35,7 +35,7 @@ def main():
                             #Se entrou aqui significa que achou um movimento possível com aquela posição
                             movement.append(mov)
 
-                    if len(mov) == 0:
+                    if len(movement) == 0:
                         print("Posição inválida.")
                 rules.move_piece(piece, movement_position)
                 for mov in movement:

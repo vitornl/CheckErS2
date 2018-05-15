@@ -16,7 +16,7 @@ class Display:
                 if piece_selected is not None:
                     possMovs = []
                     for mov in possibilities[piece_selected]:
-                        possMovs.append(mov.get_position())
+                        possMovs.append(mov.get_movement())
 
                     if board.get_piece((j, i)) == piece_selected:
                         print("S", end=" ")
