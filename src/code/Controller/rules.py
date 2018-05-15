@@ -34,31 +34,6 @@ class Rule:
                 k += 1
         players[1].set_pieces(pieces)
 
-    def _get_possible_eliminations(self, piece):
-        eatable = []
-        for p_piece in self.board.get_piece_surroundings(piece):
-            if type(p_piece) == Piece and p_piece.player != self.turn_player:
-                if p_piece.get_position()[0] < piece.get_position()[0]:
-                    if p_piece.get_position()[1] < piece.get_position()[1]:
-                        eatable.append(Movement((piece.position[0] - 2, piece.position[1] - 2), \
-                        p_piece.get_position()))
-                    else:
-                        eatable.append(Movement((piece.position[0] - 2, piece.position[1] + 2), \
-                        p_piece.get_position()))
-                else:
-                    if p_piece.get_position()[1] < piece.get_position()[1]:
-                        eatable.append(Movement((piece.position[0] + 2, piece.position[1] - 2), \
-                        p_piece.get_position()))
-                    else:
-                        eatable.append(Movement((piece.position[0] + 2, piece.position[1] + 2), \
-                        p_piece.get_position()))
-        for m_eating in eatable:
-            if not self.is_movement_possible(m_eating):
-                eatable.remove(m_eating)
-            else: print(m_eating.get_position())
-
-        return eatable
-
     def _evaluate_position(self, position, piece):
         """
             Evaluate a position
@@ -260,106 +235,31 @@ class Rule:
             return None
         return resp
 
-    # Pega lista de movimentos possíveis para uma peça em particular, dependendo se é peça normal ou dama
-    # def _get_piece_moves(self, piece):
-    #     if not piece.is_draughts:
-    #         possible_movements = self._get_normal_moves(piece)
-    #     #else:
-    #         #possible_movements = self._get_draught_moves(piece)
-
-    #     return possible_movements
-
-    # Pega movimentos de uma peça normal
-    # def _get_normal_moves(self, piece):
+    # # Pega movimento de uma dama
+    # def _get_draught_moves(self, piece):
     #     possible_movements = []
-        
-    #     if self.turn_player == self.players[1]:  # Player r jogando
-    #         candidate_mov_1 = Movement((piece.position[0] - 1, piece.position[1] - 1), None)
-    #         candidate_mov_2 = Movement((piece.position[0] + 1, piece.position[1] - 1), None)
+    #     for i in range(4):
+    #         candidate_movement = self.get_draught_candidate_movement(piece.get_position(), i)
 
-    #         #Caso o movimento não seja possível por conta de uma peça adversária,
-    #         #é necessário ver possibilidade de pular sobre peça
-            
-    #         if not self.is_movement_possible(candidate_mov_1): 
-    #             possiblePiece = self.board.get_piece(candidate_mov_1.get_position())
-    #             if possiblePiece != None:
-    #                 if possiblePiece.player != self.players[1]:
-    #                     candidate_mov_1 = Movement((piece.position[0] - 2, piece.position[1] - 2)
-    #                                 ,candidate_mov_1.get_position())         
+    #         while self.is_movement_possible(candidate_movement):
+    #             possible_movements.append(candidate_movement)
+    #             candidate_movement = self.get_draught_candidate_movement(candidate_movement, i)
 
-    #         if not self.is_movement_possible(candidate_mov_2):
-    #             possiblePiece = self.board.get_piece(candidate_mov_2.get_position())
-    #             if possiblePiece != None:
-    #                 if possiblePiece.player != self.players[1]:
-    #                     candidate_mov_2 = Movement((piece.position[0] + 2, piece.position[1] - 2)
-    #                                         ,candidate_mov_2.get_position())
-            
-    #     else:  # Player b jogando
-            
-    #         candidate_mov_1 = Movement((piece.position[0] - 1, piece.position[1] + 1), None)
-    #         candidate_mov_2 = Movement((piece.position[0] + 1, piece.position[1] + 1), None)
-
-    #         if not self.is_movement_possible(candidate_mov_1):
-    #             possiblePiece = self.board.get_piece(candidate_mov_1.get_position())
-    #             if possiblePiece != None:
-    #                 if possiblePiece.player != self.players[0]:
-    #                     candidate_mov_1 = Movement((piece.position[0] - 2, piece.position[1] + 2),
-    #                                                 candidate_mov_1.get_position())
-
-    #         if not self.is_movement_possible(candidate_mov_2): 
-    #             possiblePiece = self.board.get_piece(candidate_mov_2.get_position())
-    #             if possiblePiece != None:
-    #                 if possiblePiece.player != self.players[0]:
-    #                     candidate_mov_2 = Movement((piece.position[0] + 2, piece.position[1] + 2),
-    #                                                 candidate_mov_2.get_position())
-
-    #     for movement in [candidate_mov_1, candidate_mov_2]:
-    #         if self.is_movement_possible(movement):
-    #             possible_movements.append(movement)
-        
     #     return possible_movements
 
-    # Pega movimento de uma dama
-    def _get_draught_moves(self, piece):
-        possible_movements = []
-        for i in range(4):
-            candidate_movement = self.get_draught_candidate_movement(piece.get_position(), i)
+    # # Pega movimento candidato de dama. Candidato atual é o ponto de partida para o próximo candidato
+    # # O índice de iteração decide qual orientação está sendo buscada
+    # def get_draught_candidate_movement(self, actual_candidate, index):
+    #     if index == 0:  # Noroeste
+    #         candidate_movement = (actual_candidate[0] - 1, actual_candidate[1] - 1)
+    #     elif index == 1:  # Nordeste
+    #         candidate_movement = (actual_candidate[0] + 1, actual_candidate[1] - 1)
+    #     elif index == 2:  # Sudoeste
+    #         candidate_movement = (actual_candidate[0] - 1, actual_candidate[1] + 1)
+    #     elif index == 3:  # Sudeste
+    #         candidate_movement = (actual_candidate[0] + 1, actual_candidate[1] + 1)
 
-            while self.is_movement_possible(candidate_movement):
-                possible_movements.append(candidate_movement)
-                candidate_movement = self.get_draught_candidate_movement(candidate_movement, i)
-
-        return possible_movements
-
-    # Pega movimento candidato de dama. Candidato atual é o ponto de partida para o próximo candidato
-    # O índice de iteração decide qual orientação está sendo buscada
-    def get_draught_candidate_movement(self, actual_candidate, index):
-        if index == 0:  # Noroeste
-            candidate_movement = (actual_candidate[0] - 1, actual_candidate[1] - 1)
-        elif index == 1:  # Nordeste
-            candidate_movement = (actual_candidate[0] + 1, actual_candidate[1] - 1)
-        elif index == 2:  # Sudoeste
-            candidate_movement = (actual_candidate[0] - 1, actual_candidate[1] + 1)
-        elif index == 3:  # Sudeste
-            candidate_movement = (actual_candidate[0] + 1, actual_candidate[1] + 1)
-
-        return candidate_movement
-
-    # Checa se o movimento é possível, de acordo com as condições de contorno e ocupação de uma casa
-    def is_movement_possible(self, possible_move):
-
-        candidate_play = possible_move.get_position()
-
-        # Condições de contorno do tabuleiro
-        if candidate_play[0] < 0 or candidate_play[1] < 0 or candidate_play[0] >= len(self.board.board[0]) or \
-                candidate_play[1] >= len(self.board.board):
-            return False
-        # Condição de ter peça na casa
-        piece = self.board.get_piece(candidate_play)
-        if piece is not None:
-            return False
-
-        return True
+    #     return candidate_movement
 
     def move_piece(self, selected_piece, position):
         self.board.move_piece(selected_piece, position)
@@ -373,48 +273,12 @@ class Rule:
             else:
                 if piece.get_position()[1] == 0:
                     piece.turn_draughts()
-
-    '''
-    def is_movable(self, board, new_position):
-        if(self.orientation == 0 and #north
-            new_position[1] > self.position[1] and #y
-            (new_position[0] != self.position[0]-1 or #x
-            new_position[0] != self.position[0]+1) and
-            new_position != None): #empty
-            return False
-
-        elif(self.orientation == 1 and #north
-            new_position[1] < self.position[1] and #y
-            (new_position[0] != self.position[0]-1 or #x
-            new_position[0] != self.position[0]+1) and
-            new_position != None): #empty
-            return False
-        
-        return True
-    '''
     
     def eat_pieces(self, movement):
         eat_list = movement.get_eliminateds()
         for piece in eat_list:
             self.board.remove_piece(piece)
             piece.player.remove_piece(piece)
-    
-    '''
-    def movable_piece(self, piece):
-        neighborhood = self.board.get_surroundings(piece)
-        for neighbor in neighborhood:
-            if neighbor is None:
-                return True
-            if not neighbor.player is piece.player:
-                return True
-        return False
-    '''
-
-    def valid_moves(self, piece_position):
-        pass
-
-    def valid_pieces(self):
-        pass
 
     def _other_player(self, player):
         if player is self.players[0]:
