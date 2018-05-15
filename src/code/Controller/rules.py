@@ -86,11 +86,22 @@ class Rule:
         return 1
 
     def _build_eating_path(self, movement):
+        """
+            Creates a eating path from the last position of the piece after the actual movement
+
+            Parameters
+            ----------
+            movement: the movement of a piece
+
+            Returns
+            -------
+            A new movement list or the input movement
+        """
         piece = movement.get_piece()
         resp = []
         for i in (-1, 1):
             for j in (-1, 1):
-                aux_position = movement.get_movement()
+                aux_position = movement.get_last_movement()
                 position = [aux_position[0] + i, aux_position[1] + j]
                 eval_mov = self._evaluate_position(position, piece)
                 if eval_mov == 2:
@@ -113,9 +124,31 @@ class Rule:
         return resp
 
     def _build_movement_draught(self, piece):
+        """
+            Builder of movement using the piece start position, movement can be walk or jump
+
+            Parameters
+            ----------
+            piece: Piece that is going to move
+
+            Returns
+            -------
+            The movement list
+        """
         return []
 
     def _build_movement_normal(self, piece):
+        """
+            Builder of movement using the piece start position, movement can be walk or jump
+
+            Parameters
+            ----------
+            piece: Piece that is going to move
+
+            Returns
+            -------
+            The movement list
+        """
         resp = []
 
         #front movement evaluation
@@ -164,11 +197,34 @@ class Rule:
 
     
     def _build_movement(self, piece):
+        """
+            Decide which builder to use
+
+            Parameters
+            ----------
+            piece: Piece that is going to move
+
+            Returns
+            -------
+            A Movement list, representing the valid moves of the piece
+        """
         if piece.is_draughts:
             return self._build_movement_draught(piece)
         return self._build_movement_normal(piece)
 
     def _priority_insert(self, eat_list, movement):
+        """
+            Insert a new eating movement in the list, this creates the higger eating path
+
+            Parameters
+            ----------
+            eat_list: the movement list
+            movement: the new movement to be inserted
+
+            Returns
+            -------
+            the new eat_list
+        """
         if len(eat_list) == 0:
             eat_list.append(movement)
         else:
