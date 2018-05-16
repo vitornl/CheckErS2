@@ -1,4 +1,5 @@
 # coding=utf-8
+import sys
 
 from code.Controller.rules import Rule
 from code.View.pygame_display import Pygame_Display
@@ -6,10 +7,19 @@ from code.View.console_display import Console_Display
 
 
 def main():
-    rules = Rule()
+    if len(sys.argv) != 2:
+        print("Invalid Input")
+        return
 
-    display = Pygame_Display()
-    # display = Console_Display()
+    rules = Rule()
+    display = None
+
+    if sys.argv[1] == "pygame":
+        display = Pygame_Display()
+    elif sys.argv[1] == "console":
+        display = Console_Display()
+    else:
+        return
 
     print("Atenção!!! Digitar posições no formato: coluna linha\n")
 
@@ -20,7 +30,7 @@ def main():
         print("--- TURNO: Jogador {} ---".format(rules.turn_player.name))
 
         print("Digite a peça a ser jogada: ", end='')
-        piece_position = display.get_piece_position()
+        piece_position = display.get_position()
         if type(piece_position) != tuple:
             display.quit()
             return
@@ -35,7 +45,7 @@ def main():
                     display.print_board(rules.board, piece, path)
                 
                     print("Digite a posição do movimento da peça: ", end='')
-                    movement_position = display.get_piece_position()
+                    movement_position = display.get_position()
                     if type(piece_position) != tuple:
                         display.quit()
                         return

@@ -40,7 +40,7 @@ class Console_Display:
         self._print_board(board, piece_selected, possibilities)
         print()
 
-    def get_piece_position(self):
+    def get_position(self):
         string = input()
         aux = string.split(" ")
         if len(aux) != 2:

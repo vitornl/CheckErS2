@@ -19,7 +19,7 @@ class Pygame_Display:
         pygame.init()
         self.pywin = pygame.display.set_mode(_dim)
 
-    def get_piece_position(self):
+    def get_position(self):
         while True:
             var = self._event_listener(pygame.event.get())
             if var: return var
