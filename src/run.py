@@ -1,21 +1,29 @@
 # coding=utf-8
 
 from code.Controller.rules import Rule
-from code.View.display import Display
-from code.Controller.util import Util
+from code.View.pygame_display import Pygame_Display
+from code.View.console_display import Console_Display
 
 
 def main():
     rules = Rule()
 
+    display = Pygame_Display()
+    # display = Console_Display()
+
     print("Atenção!!! Digitar posições no formato: coluna linha\n")
 
     while (rules.win_condition()):
-        Display.print_board_spaced(rules.board, None, None)
+        display.print_board(rules.board, None, None)
 
         possibilities = rules.get_all_possible_moves(rules.turn_player)
         print("--- TURNO: Jogador {} ---".format(rules.turn_player.name))
-        piece_position = Util.string_to_int_tuple(input("Digite a peça a ser jogada: "))
+
+        print("Digite a peça a ser jogada: ", end='')
+        piece_position = display.get_piece_position()
+        if type(piece_position) != tuple:
+            display.quit()
+            return
         piece = rules.board.get_piece(piece_position)
         if piece in possibilities.keys() and len(possibilities[piece]) != 0:
 
@@ -24,9 +32,13 @@ def main():
             while len(path) != 0:
                 movement = []
                 while len(movement) == 0:
-                    Display.print_board_spaced(rules.board, piece, path)
+                    display.print_board(rules.board, piece, path)
                 
-                    movement_position = Util.string_to_int_tuple(input("Digite a posição do movimento da peça: "))
+                    print("Digite a posição do movimento da peça: ", end='')
+                    movement_position = display.get_piece_position()
+                    if type(piece_position) != tuple:
+                        display.quit()
+                        return
 
                     for mov in path:
                         if mov.get_movement() == movement_position:
@@ -50,6 +62,7 @@ def main():
                     path = movement
         else:
             print("Selecione uma peça sua que tenha movimentos possíveis.")
+    display.quit()
 
 if __name__ == "__main__":
     main()

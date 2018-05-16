@@ -1,10 +1,9 @@
 # coding=utf-8
 from ..Model.movement import Movement
 
-class Display:
+class Console_Display:
 
-    @staticmethod
-    def print_board(board, piece_selected, movement):
+    def _print_board(self, board, piece_selected, movement):
         print(" ", end=" ")
         for i in range(len(board.board[0])): #header
             print(i, end=" ")
@@ -36,8 +35,18 @@ class Display:
 
             print()
 
-    @staticmethod
-    def print_board_spaced(board, piece_selected, possibilities):
+    def print_board(self, board, piece_selected, possibilities):
         print()
-        Display.print_board(board, piece_selected, possibilities)
+        self._print_board(board, piece_selected, possibilities)
         print()
+
+    def get_piece_position(self):
+        string = input()
+        aux = string.split(" ")
+        if len(aux) != 2:
+            return 1
+        tup = tuple(map(int, aux))
+        return tup
+
+    def quit(self):
+        pass

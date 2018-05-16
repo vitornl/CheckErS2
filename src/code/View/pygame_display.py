@@ -5,6 +5,7 @@ _WHITE  = pygame.Color('white')
 _BLUE   = pygame.Color('blue')
 _RED    = pygame.Color('red')
 _HOVER = pygame.Color('yellow')
+_SELECTED = pygame.Color('darkseagreen')
 _CENTER = pygame.Color('green')
 
 _tile_size = 75
@@ -58,7 +59,7 @@ class Pygame_Display:
                         special = True
 
                     elif board.get_piece((j, i)) == piece_selected:
-                        piece_color = _HOVER
+                        piece_color = _SELECTED
                         draught = piece_selected.is_draughts
                         special = True
 
