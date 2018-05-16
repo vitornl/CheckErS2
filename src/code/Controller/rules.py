@@ -156,7 +156,7 @@ class Rule:
             if eval_mov == 2:
                 piece_to_jump = self.board.get_piece(position)
                 position[0] += i
-                position[1] -= piece.player.side
+                position[1] += piece.player.side
                 eval_mov = self._evaluate_position(position, piece)
                 if eval_mov == 1:
                     mov = Movement(piece, position)
