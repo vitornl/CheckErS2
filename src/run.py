@@ -29,7 +29,7 @@ def main():
         possibilities = rules.get_all_possible_moves(rules.turn_player)
         print("--- TURNO: Jogador {} ---".format(rules.turn_player.name))
 
-        print("Digite a peça a ser jogada: ", end='')
+        print("Digite a peça a ser jogada: ", end='', flush=True)
         piece_position = display.get_position()
         if type(piece_position) != tuple:
             display.quit()
@@ -44,7 +44,7 @@ def main():
                 while len(movement) == 0:
                     display.print_board(rules.board, piece, path)
                 
-                    print("Digite a posição do movimento da peça: ", end='')
+                    print("Digite a posição do movimento da peça: ", end='', flush=True)
                     movement_position = display.get_position()
                     if type(piece_position) != tuple:
                         display.quit()
