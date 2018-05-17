@@ -286,22 +286,21 @@ class Rule:
         return self.players[0]
 
     def who_won(self, possibilities):
+        """
+            Defines who won the game.
+
+            Parameters
+            ----------
+            possibilities: Movement possibilities of the current turn player
+                           => type dict(Piece -> position), where Position is a tuple (int, int)
+            Returns
+            -------
+            Who won the game; None if in this turn there is no winner yet
+            => type Player
+        """
         if possibilities is None:
             return self._other_player(self.turn_player)
         return None
-        # for player in self.players:
-        #     possibilities = self.get_all_possible_moves(self.turn_player)
-        #     if len(player.pieces) > 0:
-        #         aux = 0
-        #         for piece in player.pieces:
-        #             aux += 1
-        #             if possibilities.__contains__(piece):
-        #                 break
-        #         if aux == len(player.pieces):
-        #             return self._other_player(player)
-        #     else:
-        #         return self._other_player(player)
-        # return self._other_player(player)
 
     def next_turn(self):
         self.turn_player = self._other_player(self.turn_player)
