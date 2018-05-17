@@ -285,20 +285,23 @@ class Rule:
             return self.players[1]
         return self.players[0]
 
-    def win_condition(self):
-        for player in self.players:
-            possibilities = self.get_all_possible_moves(self.turn_player)
-            if len(player.pieces) > 0:
-                aux = 0
-                for piece in player.pieces:
-                    aux += 1
-                    if possibilities.__contains__(piece):
-                        break
-                if aux == len(player.pieces):
-                    return self._other_player(player)
-            else:
-                return self._other_player(player)
+    def who_won(self, possibilities):
+        if possibilities is None:
+            return self._other_player(self.turn_player)
         return None
+        # for player in self.players:
+        #     possibilities = self.get_all_possible_moves(self.turn_player)
+        #     if len(player.pieces) > 0:
+        #         aux = 0
+        #         for piece in player.pieces:
+        #             aux += 1
+        #             if possibilities.__contains__(piece):
+        #                 break
+        #         if aux == len(player.pieces):
+        #             return self._other_player(player)
+        #     else:
+        #         return self._other_player(player)
+        # return self._other_player(player)
 
     def next_turn(self):
         self.turn_player = self._other_player(self.turn_player)
