@@ -21,12 +21,13 @@ def main():
     else:
         return
 
+    possibilities = rules.get_all_possible_moves(rules.turn_player)
     print("Atenção!!! Digitar posições no formato: coluna linha\n")
 
-    while (rules.win_condition()):
+    while rules.who_won(possibilities) is None:
+
         display.print_board(rules.board, None, None)
 
-        possibilities = rules.get_all_possible_moves(rules.turn_player)
         print("--- TURNO: Jogador {} ---".format(rules.turn_player.name))
 
         print("Digite a peça a ser jogada: ", end='', flush=True)
@@ -72,7 +73,11 @@ def main():
                     path = movement
         else:
             print("Selecione uma peça sua que tenha movimentos possíveis.")
+
+        possibilities = rules.get_all_possible_moves(rules.turn_player)
+
     display.quit()
+    print("Jogador {} ganhou!".format(rules.who_won(possibilities).name))
 
 if __name__ == "__main__":
     main()
