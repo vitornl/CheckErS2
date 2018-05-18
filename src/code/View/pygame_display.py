@@ -1,12 +1,16 @@
 import pygame
 
-_BLACK  = pygame.Color('black')
-_WHITE  = pygame.Color('white')
-_BLUE   = pygame.Color('blue')
-_RED    = pygame.Color('red')
+_BLACK = pygame.Color('black')
+_WHITE = pygame.Color('white')
+_BLUE = pygame.Color('blue')
+_RED = pygame.Color('red')
+_BROWN = (92, 51, 23, 255)
+_LWOOD = (233, 194, 166, 255)
 _HOVER = pygame.Color('yellow')
 _SELECTED = pygame.Color('darkseagreen')
 _CENTER = pygame.Color('green')
+
+board_color_dic = { 'classic': [_BLACK, _WHITE], 'wood': [_BROWN, _LWOOD] }
 
 player_color = { 'red': _RED, 'blue': _BLUE }
 
@@ -40,7 +44,8 @@ class Pygame_Display:
             pygame.draw.circle(self.pywin, _CENTER, (int(x), int(y)), _piece_size//4)
 
     def print_board(self, board, piece_selected, movement):
-        board_color = [_BLACK, _WHITE]
+        board_color = board_color_dic['wood']
+
         for i in range(8):
             for j in range(8):
                 special = False
