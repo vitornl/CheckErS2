@@ -36,7 +36,7 @@ def main():
             display.quit()
             return
         piece = rules.board.get_piece(piece_position)
-        if piece in possibilities.keys() and len(possibilities[piece]) != 0:
+        if piece in possibilities.keys():
 
             path = possibilities[piece]
 

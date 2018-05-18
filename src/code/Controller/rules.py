@@ -268,6 +268,9 @@ class Rule:
                 resp[mov.get_piece()].append(mov)
         if len(resp) == 0:
             return None
+        for key in player.pieces:
+            if key in resp and resp[key] == []:
+                del resp[key]
         return resp
 
     # # Pega movimento de uma dama
