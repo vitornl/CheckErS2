@@ -47,7 +47,7 @@ def main():
                 
                     print("Digite a posição do movimento da peça: ", end='', flush=True)
                     movement_position = display.get_position()
-                    if type(piece_position) != tuple:
+                    if type(movement_position) != tuple:
                         display.quit()
                         return
 
