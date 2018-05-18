@@ -83,18 +83,22 @@ class Rule:
                     piece_to_jump = self.board.get_piece(position)
                     if movement.check_elimination(piece_to_jump):
                         continue
-                    position[0] += i
-                    position[1] += j
-                    eval_mov = self._evaluate_position(position, piece)
-                    if eval_mov == 1:
-                        mov = movement.copy_movement()
-                        mov.add_destiny(position)
-                        mov.add_elimination(piece_to_jump)
-                        aux = self._build_eating_path(mov)
-                        if len(aux) > 0:
-                            resp.extend(aux)
+                    while True:
+                        position = (position[0]+i, position[1]+j)
+                        eval_mov = self._evaluate_position(position, piece)
+                        if eval_mov == 1:
+                            mov = movement.copy_movement()
+                            mov.add_destiny(position)
+                            mov.add_elimination(piece_to_jump)
+                            aux = self._build_eating_path(mov)
+                            if len(aux) > 0:
+                                resp.extend(aux)
+                            else:
+                                resp.append(mov)
                         else:
-                            resp.append(mov)
+                            break
+                        if not piece.is_draughts:
+                            break
         
         return resp
 
@@ -110,7 +114,38 @@ class Rule:
             -------
             The movement list
         """
-        return []
+        resp = []
+
+        #position evaluator
+        for i in (-1, 1):
+            for j in (-1, 1):
+                for radius in range(1,8):
+                    aux_position = piece.get_position()
+                    position = [aux_position[0] + i*radius, aux_position[1] + j*radius]
+                    eval_mov = self._evaluate_position(position, piece)
+                    if eval_mov == 1:
+                        mov = Movement(piece, position)
+                        resp.append(mov)
+                    elif eval_mov == 2:
+                        piece_to_jump = self.board.get_piece(position)
+                        while True:
+                            position = (position[0]+i, position[1]+j)
+                            eval_mov = self._evaluate_position(position, piece)
+                            if eval_mov == 1:
+                                mov = Movement(piece, position)
+                                mov.add_elimination(piece_to_jump)
+                                aux = self._build_eating_path(mov)
+                                if len(aux) > 0:
+                                    resp.extend(aux)
+                                else:
+                                    resp.append(mov)
+                            else:
+                                break
+                        break
+                    else:
+                        break
+
+        return resp
 
     def _build_movement_normal(self, piece):
         """
