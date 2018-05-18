@@ -8,6 +8,8 @@ _HOVER = pygame.Color('yellow')
 _SELECTED = pygame.Color('darkseagreen')
 _CENTER = pygame.Color('green')
 
+player_color = { 'red': _RED, 'blue': _BLUE }
+
 _tile_size = 75
 _piece_size = 72
 _size = 8*_tile_size
@@ -39,9 +41,6 @@ class Pygame_Display:
 
     def print_board(self, board, piece_selected, movement):
         board_color = [_BLACK, _WHITE]
-        players_color = {}
-        players_color['r'] = _RED
-        players_color['b'] = _BLUE
         for i in range(8):
             for j in range(8):
                 special = False
@@ -65,7 +64,7 @@ class Pygame_Display:
 
                 if (board.board[j][i] != None) and not special:
                     piece = board.get_piece((j, i))
-                    piece_color = players_color[board.board[j][i].player.name]
+                    piece_color = player_color[board.board[j][i].player.color]
                     draught = piece.is_draughts
 
                 if square_color == None:
