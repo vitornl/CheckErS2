@@ -1,6 +1,8 @@
 # coding=utf-8
 from ..Model.movement import Movement
 
+player_color = { 'red': 'r', 'blue': 'b' }
+
 class Console_Display:
 
     def _print_board(self, board, piece_selected, movement):
@@ -26,10 +28,11 @@ class Console_Display:
 
                 if(board.board[j][i] != None):
                     piece = board.get_piece((j, i))
+                    color = player_color[board.board[j][i].player.color]
                     if not piece.is_draughts:
-                        print(board.board[j][i].player.name, end=" ")
+                        print(color, end=" ")
                     else:
-                        print(str.capitalize(board.board[j][i].player.name), end=" ")
+                        print(str.capitalize(color), end=" ")
                 else:
                     print("_", end=" ")
 
