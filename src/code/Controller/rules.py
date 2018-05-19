@@ -305,32 +305,6 @@ class Rule:
                 del resp[key]
         return resp
 
-    # # Pega movimento de uma dama
-    # def _get_draught_moves(self, piece):
-    #     possible_movements = []
-    #     for i in range(4):
-    #         candidate_movement = self.get_draught_candidate_movement(piece.get_position(), i)
-
-    #         while self.is_movement_possible(candidate_movement):
-    #             possible_movements.append(candidate_movement)
-    #             candidate_movement = self.get_draught_candidate_movement(candidate_movement, i)
-
-    #     return possible_movements
-
-    # # Pega movimento candidato de dama. Candidato atual é o ponto de partida para o próximo candidato
-    # # O índice de iteração decide qual orientação está sendo buscada
-    # def get_draught_candidate_movement(self, actual_candidate, index):
-    #     if index == 0:  # Noroeste
-    #         candidate_movement = (actual_candidate[0] - 1, actual_candidate[1] - 1)
-    #     elif index == 1:  # Nordeste
-    #         candidate_movement = (actual_candidate[0] + 1, actual_candidate[1] - 1)
-    #     elif index == 2:  # Sudoeste
-    #         candidate_movement = (actual_candidate[0] - 1, actual_candidate[1] + 1)
-    #     elif index == 3:  # Sudeste
-    #         candidate_movement = (actual_candidate[0] + 1, actual_candidate[1] + 1)
-
-    #     return candidate_movement
-
     def move_piece(self, selected_piece, position):
         """
             Fuction to move a piece to a position in the board
