@@ -340,5 +340,17 @@ class Rule:
             return self._other_player(self.turn_player)
         return None
 
+    def draw_ocurred(self):
+        return False
+
+    def check_draw_turns(self, piece, movement):
+        eat_list = movement.get_eliminateds()
+        if piece.is_draughts and len(eat_list) == 0:
+            self.turn_player.draw_turns += 1
+        else:
+            self.turn_player.draw_turns = 0
+        print(self.turn_player.draw_turns)
+
+
     def next_turn(self):
         self.turn_player = self._other_player(self.turn_player)

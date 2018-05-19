@@ -6,6 +6,7 @@ class Player:
         self.color = color
         self.side = side
         self.pieces = []
+        self.draw_turns = 0
 
     def set_pieces(self, pieces):
         self.pieces = pieces
