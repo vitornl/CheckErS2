@@ -84,7 +84,10 @@ def main():
         possibilities = rules.get_all_possible_moves(rules.turn_player)
 
     display.quit()
-    print("Jogador {} ganhou!".format(rules.who_won(possibilities).name))
+    if rules.who_won(possibilities) is None:
+        print("A partida terminou empatada!")
+    else:
+        print("Jogador {} ganhou!".format(rules.who_won(possibilities).name))
 
 if __name__ == "__main__":
     main()

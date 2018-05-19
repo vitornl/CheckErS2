@@ -13,3 +13,10 @@ class Player:
     
     def remove_piece(self, piece):
         self.pieces.remove(piece)
+
+    def get_qty_draughts(self):
+        qty = 0
+        for piece in self.pieces:
+            if piece.is_draughts:
+                qty += 1
+        return qty
