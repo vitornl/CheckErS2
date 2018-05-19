@@ -1,18 +1,24 @@
 # coding=utf-8
+import copy
 from ..Model.board import Board
 from ..Model.piece import Piece
 from ..Model.player import Player
 from ..Model.movement import Movement
+from ..Model.bot import Bot
 
 class Rule:
 
-    def __init__(self):
+    def __init__(self, mode):
         self.board = Board()
-        self.players, self.turn_player = self._set_players()
+        self.players, self.turn_player = self._set_players(mode)
         self._init_board(self.board, self.players)      
 
-    def _set_players(self):
-        p1 = Player('b', 'blue', -1)
+    def _set_players(self, mode):
+        if mode == 'bot':
+            p1 = Bot('easy', 'ai', 'blue', -1)
+        else:
+            p1 = Player('b', 'blue', -1)
+        
         p2 = Player('r', 'red', 1)
 
         return (p1, p2), p2
@@ -203,8 +209,6 @@ class Rule:
                         resp.append(mov)
 
         return resp
-                
-
     
     def _build_movement(self, piece):
         """
@@ -273,32 +277,6 @@ class Rule:
                 del resp[key]
         return resp
 
-    # # Pega movimento de uma dama
-    # def _get_draught_moves(self, piece):
-    #     possible_movements = []
-    #     for i in range(4):
-    #         candidate_movement = self.get_draught_candidate_movement(piece.get_position(), i)
-
-    #         while self.is_movement_possible(candidate_movement):
-    #             possible_movements.append(candidate_movement)
-    #             candidate_movement = self.get_draught_candidate_movement(candidate_movement, i)
-
-    #     return possible_movements
-
-    # # Pega movimento candidato de dama. Candidato atual é o ponto de partida para o próximo candidato
-    # # O índice de iteração decide qual orientação está sendo buscada
-    # def get_draught_candidate_movement(self, actual_candidate, index):
-    #     if index == 0:  # Noroeste
-    #         candidate_movement = (actual_candidate[0] - 1, actual_candidate[1] - 1)
-    #     elif index == 1:  # Nordeste
-    #         candidate_movement = (actual_candidate[0] + 1, actual_candidate[1] - 1)
-    #     elif index == 2:  # Sudoeste
-    #         candidate_movement = (actual_candidate[0] - 1, actual_candidate[1] + 1)
-    #     elif index == 3:  # Sudeste
-    #         candidate_movement = (actual_candidate[0] + 1, actual_candidate[1] + 1)
-
-    #     return candidate_movement
-
     def move_piece(self, selected_piece, position):
         self.board.move_piece(selected_piece, position)
 
@@ -342,3 +320,14 @@ class Rule:
 
     def next_turn(self):
         self.turn_player = self._other_player(self.turn_player)
+
+    def copy(self):
+        """
+            Make a copy of itself.
+
+            Returns
+                -------
+                A copy of the rule object
+        """
+
+        return copy.deepcopy(self)
