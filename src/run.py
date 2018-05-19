@@ -86,16 +86,12 @@ def human_vs_bot(display):
 
         if rules.turn_player.name == 'ai':
             movement = rules.turn_player.execute(rules, possibilities)
-            print(movement)
             piece = movement.get_piece()
             while True:
                 rules.move_piece(piece, movement.get_movement())
                 movement.next_movement()
                 if (movement.get_movement() == None):
-                    print(movement)
-                    if movement.get_eliminateds():
-                        print("ai", movement.get_eliminateds())
-                        rules.eat_pieces(movement)
+                    rules.eat_pieces(movement)
                     rules.check_draughts(piece)
                     rules.next_turn()
                     print("Jogada realizada com sucesso.")

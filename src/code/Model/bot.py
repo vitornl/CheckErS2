@@ -52,8 +52,8 @@ class Bot(Player):
                     for dest in destiny[1:]:
                         movement.add_destiny(dest)
                     eliminated = old_movement.eliminated
-                    for piece in eliminated:
-                        piece_position = piece.get_position()
+                    for elim_piece in eliminated:
+                        piece_position = elim_piece.get_position()
                         movement.add_elimination(simulator.board.get_piece(piece_position))
                     
                     while True:
@@ -61,7 +61,7 @@ class Bot(Player):
                         movement.next_movement()
                         if movement.get_movement() == None:
                             if movement.get_eliminateds():
-                                print("ai", movement.get_eliminateds())
+                                # print("ai", movement.get_eliminateds())
                                 simulator.eat_pieces(movement)
                             simulator.check_draughts(piece)
                             simulator.next_turn()
@@ -100,8 +100,8 @@ class Bot(Player):
                     for dest in destiny[1:]:
                         movement.add_destiny(dest)
                     eliminated = old_movement.eliminated
-                    for piece in eliminated:
-                        piece_position = piece.get_position()
+                    for elim_piece in eliminated:
+                        piece_position = elim_piece.get_position()
                         movement.add_elimination(simulator.board.get_piece(piece_position))
                     
                     while True:
@@ -109,7 +109,7 @@ class Bot(Player):
                         movement.next_movement()
                         if movement.get_movement() == None:
                             if movement.get_eliminateds():
-                                print("player", movement.get_eliminateds())
+                                # print("player", movement.get_eliminateds())
                                 simulator.eat_pieces(movement)
                             simulator.check_draughts(piece)
                             simulator.next_turn()
