@@ -29,7 +29,7 @@ class Pygame_Display:
     """
     def __init__(self):
         """
-            Class builder
+            Class builder, for starting pygame variables
 
             Returns
             -------
