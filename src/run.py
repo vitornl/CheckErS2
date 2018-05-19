@@ -19,7 +19,7 @@ def main():
     elif sys.argv[1] == "console":
         display = Console_Display()
     else:
-        return
+        exit(1)
 
     possibilities = rules.get_all_possible_moves(rules.turn_player)
     print("Atenção!!! Digitar posições no formato: coluna linha\n")
