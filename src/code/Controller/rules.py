@@ -363,7 +363,7 @@ class Rule:
             return self.players[1]
         return self.players[0]
 
-    def who_won(self, possibilities):
+    def _who_won(self, possibilities):
         """
             Defines who won the game.
 
@@ -380,7 +380,7 @@ class Rule:
             return self._other_player(self.turn_player)
         return None
 
-    def draw_ocurred(self):
+    def _draw_ocurred(self):
         """
             Defines if the game has drawn.
 
@@ -430,6 +430,11 @@ class Rule:
         else:
             self.turn_player.draw_turns = 0
 
+    def end_game(self, possibilities):
+        winner = self._who_won(possibilities)
+        if winner is None:
+            return self._draw_ocurred(), None
+        return True, winner
 
     def next_turn(self):
         """
