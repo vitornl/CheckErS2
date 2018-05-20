@@ -7,17 +7,39 @@ from ..Model.movement import Movement
 class Rule:
 
     def __init__(self):
+        """
+            Class builder
+
+            Returns
+            -------
+            A Rule class object
+        """
         self.board = Board()
         self.players, self.turn_player = self._set_players()
         self._init_board(self.board, self.players)      
 
     def _set_players(self):
+        """
+            Initiator of the players
+
+            Returns
+            -------
+            The created players and the first player that is going to play
+        """
         p1 = Player('b', 'blue', -1)
         p2 = Player('r', 'red', 1)
 
         return (p1, p2), p2
 
     def _init_board(self, board, players):
+        """
+            Initiate the pieces in the board and assing them to the players
+
+            Parameters
+            ----------
+            board: The empty board
+            player: The players of the game
+        """
         pieces = [Piece(players[0]) for i in range(12)]
         k = 0
         for i in range(0, 3):
@@ -244,10 +266,20 @@ class Rule:
                     eat_list = []
                 eat_list.append(movement)
         return eat_list
-            
-    # Pega possibilidades de jogadas, mapeadas como um dicionário Peça -> Lista de Jogadas
-    # A lista de jogada é uma lista de tuplas com posições possíveis   
+
     def get_all_possible_moves(self, player):
+        """
+            Fuction to evaluate the list of valid movement of a player
+
+            Parameters
+            ----------
+            player: The actual player to evaluate the movement
+
+            Returns
+            -------
+            A Dictionary({piece:[movement]}), where the keys is a piece able to be moved and
+            the valuea are a array of movement, for this piece
+        """
         resp = {}
         walk = []
         eat = []
@@ -273,37 +305,25 @@ class Rule:
                 del resp[key]
         return resp
 
-    # # Pega movimento de uma dama
-    # def _get_draught_moves(self, piece):
-    #     possible_movements = []
-    #     for i in range(4):
-    #         candidate_movement = self.get_draught_candidate_movement(piece.get_position(), i)
-
-    #         while self.is_movement_possible(candidate_movement):
-    #             possible_movements.append(candidate_movement)
-    #             candidate_movement = self.get_draught_candidate_movement(candidate_movement, i)
-
-    #     return possible_movements
-
-    # # Pega movimento candidato de dama. Candidato atual é o ponto de partida para o próximo candidato
-    # # O índice de iteração decide qual orientação está sendo buscada
-    # def get_draught_candidate_movement(self, actual_candidate, index):
-    #     if index == 0:  # Noroeste
-    #         candidate_movement = (actual_candidate[0] - 1, actual_candidate[1] - 1)
-    #     elif index == 1:  # Nordeste
-    #         candidate_movement = (actual_candidate[0] + 1, actual_candidate[1] - 1)
-    #     elif index == 2:  # Sudoeste
-    #         candidate_movement = (actual_candidate[0] - 1, actual_candidate[1] + 1)
-    #     elif index == 3:  # Sudeste
-    #         candidate_movement = (actual_candidate[0] + 1, actual_candidate[1] + 1)
-
-    #     return candidate_movement
-
     def move_piece(self, selected_piece, position):
+        """
+            Fuction to move a piece to a position in the board
+
+            Parameters
+            ----------
+            selected_piece: The piece that is going to be moved
+            position: The destiny position of the piece
+        """
         self.board.move_piece(selected_piece, position)
 
-    # Checa e executa virada de dama
     def check_draughts(self, piece):
+        """
+            Execute the draught transformation
+
+            Parameters
+            ----------
+            piece: The piece to be evaluated
+        """
         if piece is not None and piece in self.turn_player.pieces and not piece.is_draughts:
             if self.turn_player.name == 'b':
                 if piece.get_position()[1] == len(self.board.board) - 1:
@@ -313,12 +333,30 @@ class Rule:
                     piece.turn_draughts()
     
     def eat_pieces(self, movement):
+        """
+            Operation for eating every jumped piece in the board based in the movement
+
+            Parameters
+            ----------
+            movement: The finish movement
+        """
         eat_list = movement.get_eliminateds()
         for piece in eat_list:
             self.board.remove_piece(piece)
             piece.player.remove_piece(piece)
 
     def _other_player(self, player):
+        """
+            Fuction to evaluate a player and return the other player in the game
+
+            Parameters
+            ----------
+            player: The actual player
+
+            Returns
+            -------
+            The other player of the game
+        """
         if player is self.players[0]:
             return self.players[1]
         return self.players[0]
@@ -341,4 +379,7 @@ class Rule:
         return None
 
     def next_turn(self):
+        """
+            Changes the turn player of the game
+        """
         self.turn_player = self._other_player(self.turn_player)
