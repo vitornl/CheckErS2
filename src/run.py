@@ -15,6 +15,8 @@ def _human_play(rules, display, possibilities):
     piece = rules.board.get_piece(piece_position)
     if possibilities and piece in possibilities.keys():
 
+        moved = False
+
         path = possibilities[piece]
 
         while len(path) != 0:
@@ -34,12 +36,15 @@ def _human_play(rules, display, possibilities):
                         movement.append(mov)
 
                 if len(movement) == 0:
-                    if movement_position == piece_position:
+                    if movement_position == piece_position and not moved:
                         break
                     print("Posição inválida.")
 
-            if movement_position == piece_position: break
+            if movement_position == piece_position and not moved:
+                break
+
             rules.move_piece(piece, movement_position)
+            moved = True
 
             for mov in movement:
                 mov.next_movement()
