@@ -56,6 +56,8 @@ class Rule:
                 k += 1
         players[1].set_pieces(pieces)
 
+
+
     def _evaluate_position(self, position, piece):
         """
             Evaluate a position
@@ -377,6 +379,57 @@ class Rule:
         if possibilities is None:
             return self._other_player(self.turn_player)
         return None
+
+    def draw_ocurred(self):
+        """
+            Defines if the game has drawn.
+
+            Returns
+            -------
+            True if a draw condition happened, false otherwise.
+            => type Bool
+        """
+        # Condition one
+        if self.players[0].draw_turns >= 20 and self.players[1].draw_turns >= 20:
+            return True
+
+        # Condition two, alterned means one or more draughts vs normal + draught. a stands for alterned, d for draughts
+        qty_pieces = [len(self.players[0].pieces), len(self.players[1].pieces)]
+        qty_draughts = [self.players[0].get_qty_draughts(), self.players[1].get_qty_draughts()]
+
+        draughts_2_v_2 = qty_pieces[0] == 2 and qty_draughts[0] == 2 and qty_pieces[1] == 2 and qty_draughts[1] == 2
+
+        draughts_2_v_1 = (qty_pieces[0] == 2 and qty_draughts[0] == 2 and qty_pieces[1] == 1 and qty_draughts[1] == 1) or (qty_pieces[0] == 1 and qty_draughts[0] == 1 and qty_pieces[1] == 2 and qty_draughts[1] == 2)
+
+        draughts_1_v_1 = qty_pieces[0] == 1 and qty_draughts[0] == 1 and qty_pieces[1] == 1 and qty_draughts[1] == 1
+
+        alterned_2d_v_2a = (qty_pieces[0] == 2 and qty_draughts[0] == 2 and qty_pieces[1] == 2 and qty_draughts[1] == 1) or (qty_pieces[0] == 2 and qty_draughts[0] == 1 and qty_pieces[1] == 2 and qty_draughts[1] == 2)
+
+        alterned_1d_v_2a = (qty_pieces[0] == 1 and qty_draughts[0] == 1 and qty_pieces[1] == 2 and qty_draughts[1] == 1) or (qty_pieces[0] == 2 and qty_draughts[0] == 1 and qty_pieces[1] == 1 and qty_draughts[1] == 1)
+
+        if draughts_2_v_2 or draughts_2_v_1 or draughts_1_v_1 or alterned_2d_v_2a or alterned_1d_v_2a:
+            if self.players[0].draw_turns >= 5 and self.players[1].draw_turns >= 5:
+                return True
+
+        return False
+
+    def check_draw_turns(self, piece, movement):
+        """
+            Checks if the actual movement of a piece contributes to a draw condition. If it does, compute the result.
+
+            Parameters
+            ----------
+            piece: Piece that has been moved.
+                   => type Piece
+            movement: Movement that has ocurred in the turn.
+                   => type Movement
+        """
+        eat_list = movement.get_eliminateds()
+        if piece.is_draughts and len(eat_list) == 0:
+            self.turn_player.draw_turns += 1
+        else:
+            self.turn_player.draw_turns = 0
+
 
     def next_turn(self):
         """

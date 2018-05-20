@@ -24,7 +24,7 @@ def main():
     possibilities = rules.get_all_possible_moves(rules.turn_player)
     print("Atenção!!! Digitar posições no formato: coluna linha\n")
 
-    while rules.who_won(possibilities) is None:
+    while rules.who_won(possibilities) is None and not rules.draw_ocurred():
 
         display.print_board(rules.board, None, None)
 
@@ -74,6 +74,7 @@ def main():
                 
                 if (len(movement) == 1) and (movement[0].get_movement() == None):
                     path = []
+                    rules.check_draw_turns(piece, movement[0])
                     rules.eat_pieces(movement[0])
                     rules.check_draughts(piece)
                     rules.next_turn()
@@ -86,7 +87,10 @@ def main():
         possibilities = rules.get_all_possible_moves(rules.turn_player)
 
     display.quit()
-    print("Jogador {} ganhou!".format(rules.who_won(possibilities).name))
+    if rules.who_won(possibilities) is None:
+        print("A partida terminou empatada!")
+    else:
+        print("Jogador {} ganhou!".format(rules.who_won(possibilities).name))
 
 if __name__ == "__main__":
     main()
