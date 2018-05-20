@@ -431,6 +431,19 @@ class Rule:
             self.turn_player.draw_turns = 0
 
     def end_game(self, possibilities):
+        """
+            Defines the end game conditions
+
+            Parameters
+            ----------
+            possibilities: Movement possibilities of the current turn player
+                           => type dict(Piece -> position), where Position is a tuple (int, int)
+            Returns
+            -------
+            A bool meaning if the game has ended
+            and won the game; None if in this turn there is no winner yet
+            => type Player
+        """
         winner = self._who_won(possibilities)
         if winner is None:
             return self._draw_ocurred(), None
