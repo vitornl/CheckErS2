@@ -35,7 +35,7 @@ class Bot(Player):
     
     def _minmax(self, rules, alpha, beta, depth, possibilities):
         #preciso de acesso ao fim do jogo
-        if depth == self.max_depth or rules.who_won(possibilities):
+        if depth == self.max_depth or rules.end_game(possibilities)[0]:
             return self._utilty(rules)
 
         if rules.turn_player.name == 'ai':

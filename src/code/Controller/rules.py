@@ -71,8 +71,6 @@ class Rule:
                 k += 1
         players[1].set_pieces(pieces)
 
-
-
     def _evaluate_position(self, position, piece):
         """
             Evaluate a position
