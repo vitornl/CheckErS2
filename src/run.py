@@ -78,7 +78,9 @@ def human_vs_bot(display):
     possibilities = rules.get_all_possible_moves(rules.turn_player)
     print("Atenção!!! Digitar posições no formato: coluna linha\n")
 
-    while rules.who_won(possibilities) is None:
+    end_game = rules.end_game(possibilities)
+
+    while not end_game[0]:
 
         display.print_board(rules.board, None, None)
 
@@ -100,6 +102,7 @@ def human_vs_bot(display):
             _human_play(rules, display, possibilities)
 
         possibilities = rules.get_all_possible_moves(rules.turn_player)
+        end_game = rules.end_game(possibilities)
 
     display.quit()
     print("Jogador {} ganhou!".format(rules.who_won(possibilities).name))
@@ -124,6 +127,12 @@ def main():
         human_vs_bot(display)
     else:
         exit(1)
+    '''
+    if end_game[1] is None:
+        print("A partida terminou empatada!")
+    else:
+        print("Jogador {} ganhou!".format(end_game[1].name))
+    '''
 
 if __name__ == "__main__":
     main()

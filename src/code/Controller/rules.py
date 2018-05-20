@@ -9,21 +9,52 @@ from ..Model.bot import Bot
 class Rule:
 
     def __init__(self, mode, *args):
+        """
+            Class builder
+            
+            Parameters
+            ----------
+            mode : game mode (2 player or bot vs. human)
+            *args : bot level ('easy', 'normal', 'hard')
+
+            Returns
+            -------
+            A Rule class object
+        """
         self.board = Board()
         self.players, self.turn_player = self._set_players(mode, args)
         self._init_board(self.board, self.players)      
 
     def _set_players(self, mode, *args):
+        """
+            Initiator of the players
+            
+            Parameters
+            ----------
+            mode : game mode (2 player or bot vs. human)
+            *args : bot level ('easy', 'normal', 'hard')
+
+            Returns
+            -------
+            The created players and the first player that is going to play
+        """
         if mode == 'bot':
             p1 = Bot(args[0][0], 'ai', 'blue', -1)
         else:
             p1 = Player('b', 'blue', -1)
-        
         p2 = Player('r', 'red', 1)
 
         return (p1, p2), p2
 
     def _init_board(self, board, players):
+        """
+            Initiate the pieces in the board and assing them to the players
+
+            Parameters
+            ----------
+            board: The empty board
+            player: The players of the game
+        """
         pieces = [Piece(players[0]) for i in range(12)]
         k = 0
         for i in range(0, 3):
@@ -39,6 +70,8 @@ class Rule:
                 board.add_piece(pieces[k], (j + (i + 1) % 2, i))
                 k += 1
         players[1].set_pieces(pieces)
+
+
 
     def _evaluate_position(self, position, piece):
         """
@@ -248,10 +281,20 @@ class Rule:
                     eat_list = []
                 eat_list.append(movement)
         return eat_list
-            
-    # Pega possibilidades de jogadas, mapeadas como um dicionário Peça -> Lista de Jogadas
-    # A lista de jogada é uma lista de tuplas com posições possíveis   
+
     def get_all_possible_moves(self, player):
+        """
+            Fuction to evaluate the list of valid movement of a player
+
+            Parameters
+            ----------
+            player: The actual player to evaluate the movement
+
+            Returns
+            -------
+            A Dictionary({piece:[movement]}), where the keys is a piece able to be moved and
+            the valuea are a array of movement, for this piece
+        """
         resp = {}
         walk = []
         eat = []
@@ -278,10 +321,24 @@ class Rule:
         return resp
 
     def move_piece(self, selected_piece, position):
+        """
+            Fuction to move a piece to a position in the board
+
+            Parameters
+            ----------
+            selected_piece: The piece that is going to be moved
+            position: The destiny position of the piece
+        """
         self.board.move_piece(selected_piece, position)
 
-    # Checa e executa virada de dama
     def check_draughts(self, piece):
+        """
+            Execute the draught transformation
+
+            Parameters
+            ----------
+            piece: The piece to be evaluated
+        """
         if piece is not None and piece in self.turn_player.pieces and not piece.is_draughts:
             if self.turn_player.side == -1:
                 if piece.get_position()[1] == len(self.board.board) - 1:
@@ -291,17 +348,35 @@ class Rule:
                     piece.turn_draughts()
     
     def eat_pieces(self, movement):
+        """
+            Operation for eating every jumped piece in the board based in the movement
+
+            Parameters
+            ----------
+            movement: The finish movement
+        """
         eat_list = movement.get_eliminateds()
         for piece in eat_list:
             self.board.remove_piece(piece)
             piece.player.remove_piece(piece)
 
     def _other_player(self, player):
+        """
+            Fuction to evaluate a player and return the other player in the game
+
+            Parameters
+            ----------
+            player: The actual player
+
+            Returns
+            -------
+            The other player of the game
+        """
         if player is self.players[0]:
             return self.players[1]
         return self.players[0]
 
-    def who_won(self, possibilities):
+    def _who_won(self, possibilities):
         """
             Defines who won the game.
 
@@ -318,7 +393,79 @@ class Rule:
             return self._other_player(self.turn_player)
         return None
 
+    def _draw_ocurred(self):
+        """
+            Defines if the game has drawn.
+
+            Returns
+            -------
+            True if a draw condition happened, false otherwise.
+            => type Bool
+        """
+        # Condition one
+        if self.players[0].draw_turns >= 20 and self.players[1].draw_turns >= 20:
+            return True
+
+        # Condition two, alterned means one or more draughts vs normal + draught. a stands for alterned, d for draughts
+        qty_pieces = [len(self.players[0].pieces), len(self.players[1].pieces)]
+        qty_draughts = [self.players[0].get_qty_draughts(), self.players[1].get_qty_draughts()]
+
+        draughts_2_v_2 = qty_pieces[0] == 2 and qty_draughts[0] == 2 and qty_pieces[1] == 2 and qty_draughts[1] == 2
+
+        draughts_2_v_1 = (qty_pieces[0] == 2 and qty_draughts[0] == 2 and qty_pieces[1] == 1 and qty_draughts[1] == 1) or (qty_pieces[0] == 1 and qty_draughts[0] == 1 and qty_pieces[1] == 2 and qty_draughts[1] == 2)
+
+        draughts_1_v_1 = qty_pieces[0] == 1 and qty_draughts[0] == 1 and qty_pieces[1] == 1 and qty_draughts[1] == 1
+
+        alterned_2d_v_2a = (qty_pieces[0] == 2 and qty_draughts[0] == 2 and qty_pieces[1] == 2 and qty_draughts[1] == 1) or (qty_pieces[0] == 2 and qty_draughts[0] == 1 and qty_pieces[1] == 2 and qty_draughts[1] == 2)
+
+        alterned_1d_v_2a = (qty_pieces[0] == 1 and qty_draughts[0] == 1 and qty_pieces[1] == 2 and qty_draughts[1] == 1) or (qty_pieces[0] == 2 and qty_draughts[0] == 1 and qty_pieces[1] == 1 and qty_draughts[1] == 1)
+
+        if draughts_2_v_2 or draughts_2_v_1 or draughts_1_v_1 or alterned_2d_v_2a or alterned_1d_v_2a:
+            if self.players[0].draw_turns >= 5 and self.players[1].draw_turns >= 5:
+                return True
+
+        return False
+
+    def check_draw_turns(self, piece, movement):
+        """
+            Checks if the actual movement of a piece contributes to a draw condition. If it does, compute the result.
+
+            Parameters
+            ----------
+            piece: Piece that has been moved.
+                   => type Piece
+            movement: Movement that has ocurred in the turn.
+                   => type Movement
+        """
+        eat_list = movement.get_eliminateds()
+        if piece.is_draughts and len(eat_list) == 0:
+            self.turn_player.draw_turns += 1
+        else:
+            self.turn_player.draw_turns = 0
+
+    def end_game(self, possibilities):
+        """
+            Defines the end game conditions
+
+            Parameters
+            ----------
+            possibilities: Movement possibilities of the current turn player
+                           => type dict(Piece -> position), where Position is a tuple (int, int)
+            Returns
+            -------
+            A bool meaning if the game has ended
+            and won the game; None if in this turn there is no winner yet
+            => type Player
+        """
+        winner = self._who_won(possibilities)
+        if winner is None:
+            return self._draw_ocurred(), None
+        return True, winner
+
     def next_turn(self):
+        """
+            Changes the turn player of the game
+        """
         self.turn_player = self._other_player(self.turn_player)
 
     def copy(self):
