@@ -283,7 +283,7 @@ class Rule:
     # Checa e executa virada de dama
     def check_draughts(self, piece):
         if piece is not None and piece in self.turn_player.pieces and not piece.is_draughts:
-            if self.turn_player.name == 'b':
+            if self.turn_player.side == -1:
                 if piece.get_position()[1] == len(self.board.board) - 1:
                     piece.turn_draughts()
             else:
