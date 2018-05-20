@@ -24,7 +24,9 @@ def main():
     possibilities = rules.get_all_possible_moves(rules.turn_player)
     print("Atenção!!! Digitar posições no formato: coluna linha\n")
 
-    while rules.who_won(possibilities) is None and not rules.draw_ocurred():
+    end_game = rules.end_game(possibilities)
+
+    while not end_game[0]:
 
         display.print_board(rules.board, None, None)
 
@@ -85,12 +87,13 @@ def main():
             print("Selecione uma peça sua que tenha movimentos possíveis.")
 
         possibilities = rules.get_all_possible_moves(rules.turn_player)
+        end_game = rules.end_game(possibilities)
 
     display.quit()
-    if rules.who_won(possibilities) is None:
+    if end_game[1] is None:
         print("A partida terminou empatada!")
     else:
-        print("Jogador {} ganhou!".format(rules.who_won(possibilities).name))
+        print("Jogador {} ganhou!".format(end_game[1].name))
 
 if __name__ == "__main__":
     main()
