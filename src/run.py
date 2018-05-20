@@ -13,7 +13,7 @@ def _human_play(rules, display, possibilities):
         display.quit()
         return
     piece = rules.board.get_piece(piece_position)
-    if piece in possibilities.keys():
+    if possibilities and piece in possibilities.keys():
 
         path = possibilities[piece]
 
@@ -60,8 +60,10 @@ def human_vs_human(display):
     
     possibilities = rules.get_all_possible_moves(rules.turn_player)
     print("Atenção!!! Digitar posições no formato: coluna linha\n")
+    
+    end_game = rules.end_game(possibilities)
 
-    while rules.who_won(possibilities) is None:
+    while not end_game[0]:
 
         display.print_board(rules.board, None, None)
 
@@ -70,7 +72,11 @@ def human_vs_human(display):
         possibilities = rules.get_all_possible_moves(rules.turn_player)
 
     display.quit()
-    print("Jogador {} ganhou!".format(rules.who_won(possibilities).name))
+    
+    if end_game[1] is None:
+        print("A partida terminou empatada!")
+    else:
+        print("Jogador {} ganhou!".format(end_game[1].name))
 
 def human_vs_bot(display):
     rules = Rule('bot', 'easy')
@@ -105,7 +111,11 @@ def human_vs_bot(display):
         end_game = rules.end_game(possibilities)
 
     display.quit()
-    print("Jogador {} ganhou!".format(rules.who_won(possibilities).name))
+    
+    if end_game[1] is None:
+        print("A partida terminou empatada!")
+    else:
+        print("Jogador {} ganhou!".format(end_game[1].name))
     
 def main():
     if len(sys.argv) != 3:
@@ -127,12 +137,6 @@ def main():
         human_vs_bot(display)
     else:
         exit(1)
-    '''
-    if end_game[1] is None:
-        print("A partida terminou empatada!")
-    else:
-        print("Jogador {} ganhou!".format(end_game[1].name))
-    '''
 
 if __name__ == "__main__":
     main()
