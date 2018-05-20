@@ -3,6 +3,7 @@
 </p>
 
 # CheckErS2
+[![Build Status](https://travis-ci.org/vitornl/CheckErS2.svg?branch=master)](https://travis-ci.org/vitornl/CheckErS2)
 
 >Yet another checkers game.
 

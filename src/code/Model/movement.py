@@ -23,7 +23,7 @@ class Movement:
         """
         self.piece = piece
         self.destiny = []
-        self.destiny.append(destiny)
+        self.destiny.append(tuple(destiny))
         self.eliminated = []
 
     def copy_movement(self):
@@ -137,7 +137,7 @@ class Movement:
             ----------
             location: New position of the piece
         """
-        self.destiny.append(location)
+        self.destiny.append(tuple(location))
 
     def add_elimination(self, piece):
         """
