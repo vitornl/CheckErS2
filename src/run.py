@@ -15,6 +15,8 @@ def _human_play(rules, display, possibilities):
     piece = rules.board.get_piece(piece_position)
     if possibilities and piece in possibilities.keys():
 
+        moved = False
+
         path = possibilities[piece]
 
         while len(path) != 0:
@@ -34,12 +36,15 @@ def _human_play(rules, display, possibilities):
                         movement.append(mov)
 
                 if len(movement) == 0:
-                    if movement_position == piece_position:
+                    if movement_position == piece_position and not moved:
                         break
                     print("Posição inválida.")
 
-            if movement_position == piece_position: break
+            if movement_position == piece_position and not moved:
+                break
+
             rules.move_piece(piece, movement_position)
+            moved = True
 
             for mov in movement:
                 mov.next_movement()
@@ -55,32 +60,7 @@ def _human_play(rules, display, possibilities):
     else:
         print("Selecione uma peça sua que tenha movimentos possíveis.")
 
-def human_vs_human(display):
-    rules = Rule('human')
-    
-    possibilities = rules.get_all_possible_moves(rules.turn_player)
-    print("Atenção!!! Digitar posições no formato: coluna linha\n")
-    
-    end_game = rules.end_game(possibilities)
-
-    while not end_game[0]:
-
-        display.print_board(rules.board, None, None)
-
-        _human_play(rules, display, possibilities)
-
-        possibilities = rules.get_all_possible_moves(rules.turn_player)
-
-    display.quit()
-    
-    if end_game[1] is None:
-        print("A partida terminou empatada!")
-    else:
-        print("Jogador {} ganhou!".format(end_game[1].name))
-
-def human_vs_bot(display):
-    rules = Rule('bot', 'easy')
-
+def _game_loop(rules, display):
     possibilities = rules.get_all_possible_moves(rules.turn_player)
     print("Atenção!!! Digitar posições no formato: coluna linha\n")
 
@@ -131,12 +111,16 @@ def main():
     else:
         exit(1)
 
+    rules = None
+
     if sys.argv[2] == "human":
-        human_vs_human(display)
+        rules = Rule('human')
     elif sys.argv[2] == "bot":
-        human_vs_bot(display)
+        rules = Rule('bot', 'easy')
     else:
         exit(1)
+
+    _game_loop(rules, display)
 
 if __name__ == "__main__":
     main()
