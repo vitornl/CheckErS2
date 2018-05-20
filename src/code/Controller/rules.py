@@ -1,32 +1,47 @@
 # coding=utf-8
+import copy
 from ..Model.board import Board
 from ..Model.piece import Piece
 from ..Model.player import Player
 from ..Model.movement import Movement
+from ..Model.bot import Bot
 
 class Rule:
 
-    def __init__(self):
+    def __init__(self, mode, *args):
         """
             Class builder
+            
+            Parameters
+            ----------
+            mode : game mode (2 player or bot vs. human)
+            *args : bot level ('easy', 'normal', 'hard')
 
             Returns
             -------
             A Rule class object
         """
         self.board = Board()
-        self.players, self.turn_player = self._set_players()
+        self.players, self.turn_player = self._set_players(mode, args)
         self._init_board(self.board, self.players)      
 
-    def _set_players(self):
+    def _set_players(self, mode, *args):
         """
             Initiator of the players
+            
+            Parameters
+            ----------
+            mode : game mode (2 player or bot vs. human)
+            *args : bot level ('easy', 'normal', 'hard')
 
             Returns
             -------
             The created players and the first player that is going to play
         """
-        p1 = Player('b', 'blue', -1)
+        if mode == 'bot':
+            p1 = Bot(args[0][0], 'ai', 'blue', -1)
+        else:
+            p1 = Player('b', 'blue', -1)
         p2 = Player('r', 'red', 1)
 
         return (p1, p2), p2
@@ -227,8 +242,6 @@ class Rule:
                         resp.append(mov)
 
         return resp
-                
-
     
     def _build_movement(self, piece):
         """
@@ -327,7 +340,7 @@ class Rule:
             piece: The piece to be evaluated
         """
         if piece is not None and piece in self.turn_player.pieces and not piece.is_draughts:
-            if self.turn_player.name == 'b':
+            if self.turn_player.side == -1:
                 if piece.get_position()[1] == len(self.board.board) - 1:
                     piece.turn_draughts()
             else:
@@ -454,3 +467,14 @@ class Rule:
             Changes the turn player of the game
         """
         self.turn_player = self._other_player(self.turn_player)
+
+    def copy(self):
+        """
+            Make a copy of itself.
+
+            Returns
+                -------
+                A copy of the rule object
+        """
+
+        return copy.deepcopy(self)
