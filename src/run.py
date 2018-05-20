@@ -73,7 +73,7 @@ def human_vs_human(display):
     print("Jogador {} ganhou!".format(rules.who_won(possibilities).name))
 
 def human_vs_bot(display):
-    rules = Rule('bot')
+    rules = Rule('bot', 'easy')
 
     possibilities = rules.get_all_possible_moves(rules.turn_player)
     print("Atenção!!! Digitar posições no formato: coluna linha\n")
@@ -103,8 +103,6 @@ def human_vs_bot(display):
 
     display.quit()
     print("Jogador {} ganhou!".format(rules.who_won(possibilities).name))
-
-    raise NotImplementedError
     
 def main():
     if len(sys.argv) != 3:

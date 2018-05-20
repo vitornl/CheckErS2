@@ -8,14 +8,14 @@ from ..Model.bot import Bot
 
 class Rule:
 
-    def __init__(self, mode):
+    def __init__(self, mode, *args):
         self.board = Board()
-        self.players, self.turn_player = self._set_players(mode)
+        self.players, self.turn_player = self._set_players(mode, args)
         self._init_board(self.board, self.players)      
 
-    def _set_players(self, mode):
+    def _set_players(self, mode, *args):
         if mode == 'bot':
-            p1 = Bot('easy', 'ai', 'blue', -1)
+            p1 = Bot(args[0][0], 'ai', 'blue', -1)
         else:
             p1 = Player('b', 'blue', -1)
         
