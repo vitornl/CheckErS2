@@ -98,18 +98,11 @@ def _game_loop(rules, display):
         print("Jogador {} ganhou!".format(end_game[1].name))
     
 def main():
-    if len(sys.argv) != 3:
+    if not ((len(sys.argv) == 3) or  (len(sys.argv) == 4)):
         print("Invalid Input")
         return
 
     display = None
-
-    if sys.argv[1] == "pygame":
-        display = Pygame_Display()
-    elif sys.argv[1] == "console":
-        display = Console_Display()
-    else:
-        exit(1)
 
     rules = None
 
@@ -117,6 +110,17 @@ def main():
         rules = Rule('human')
     elif sys.argv[2] == "bot":
         rules = Rule('bot', 'easy')
+    elif sys.argv[2] == "file":
+        fp = open(sys.argv[3])
+        rules = Rule("file", fp)
+        fp.close()
+    else:
+        exit(1)
+
+    if sys.argv[1] == "pygame":
+        display = Pygame_Display()
+    elif sys.argv[1] == "console":
+        display = Console_Display()
     else:
         exit(1)
 
