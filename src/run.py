@@ -6,7 +6,14 @@ from code.View.pygame_display import Pygame_Display
 from code.View.console_display import Console_Display
 
 def _human_play(rules, display, possibilities):
-
+    """
+        Loop for the game movement of a human player
+        
+        Parameters
+        ----------
+        display: Where the game is running
+        possibilites: the list of valid plays of that player
+    """
     print("Digite a peça a ser jogada: ", end='', flush=True)
     piece_position = display.get_position()
     if type(piece_position) != tuple:
@@ -61,6 +68,13 @@ def _human_play(rules, display, possibilities):
         print("Selecione uma peça sua que tenha movimentos possíveis.")
 
 def _game_loop(rules, display):
+    """
+        The game loop
+        
+        Parameters
+        ----------
+        display: Where the game is running
+    """
     possibilities = rules.get_all_possible_moves(rules.turn_player)
     print("Atenção!!! Digitar posições no formato: coluna linha\n")
 
@@ -98,18 +112,11 @@ def _game_loop(rules, display):
         print("Jogador {} ganhou!".format(end_game[1].name))
     
 def main():
-    if len(sys.argv) != 3:
+    if not ((len(sys.argv) == 3) or  (len(sys.argv) == 4)):
         print("Invalid Input")
         return
 
     display = None
-
-    if sys.argv[1] == "pygame":
-        display = Pygame_Display()
-    elif sys.argv[1] == "console":
-        display = Console_Display()
-    else:
-        exit(1)
 
     rules = None
 
@@ -117,6 +124,17 @@ def main():
         rules = Rule('human')
     elif sys.argv[2] == "bot":
         rules = Rule('bot', 'easy')
+    elif sys.argv[2] == "file":
+        fp = open(sys.argv[3])
+        rules = Rule("file", fp)
+        fp.close()
+    else:
+        exit(1)
+
+    if sys.argv[1] == "pygame":
+        display = Pygame_Display()
+    elif sys.argv[1] == "console":
+        display = Console_Display()
     else:
         exit(1)
 
