@@ -23,12 +23,12 @@ class Rule:
         """
         self.board = Board()
         if mode == 'file':
-            self.load_file(args)
+            self._load_file(args)
         else:
             self.players, self.turn_player = self._set_players(mode, args)
             self._init_board(self.board, self.players)
 
-    def load_file(self, fp):
+    def _load_file(self, fp):
         """
             Class builder
             
