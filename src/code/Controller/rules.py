@@ -156,7 +156,7 @@ class Rule:
         for i in (-1, 1):
             for j in (-1, 1):
                 aux_position = movement.get_last_movement()
-                position = [aux_position[0] + i, aux_position[1] + j]
+                position = (aux_position[0] + i, aux_position[1] + j)
                 eval_mov = self._evaluate_position(position, piece)
                 if eval_mov == 2:
                     piece_to_jump = self.board.get_piece(position)
@@ -165,7 +165,7 @@ class Rule:
                     while True:
                         position = (position[0]+i, position[1]+j)
                         eval_mov = self._evaluate_position(position, piece)
-                        if eval_mov == 1:
+                        if eval_mov == 1 or (eval_mov == 0 and position == movement.get_piece().get_position()):
                             mov = movement.copy_movement()
                             mov.add_destiny(position)
                             mov.add_elimination(piece_to_jump)
@@ -200,7 +200,7 @@ class Rule:
             for j in (-1, 1):
                 for radius in range(1,8):
                     aux_position = piece.get_position()
-                    position = [aux_position[0] + i*radius, aux_position[1] + j*radius]
+                    position = (aux_position[0] + i*radius, aux_position[1] + j*radius)
                     eval_mov = self._evaluate_position(position, piece)
                     if eval_mov == 1:
                         mov = Movement(piece, position)
@@ -265,7 +265,7 @@ class Rule:
         #backward eating evaluation
         for i in (-1, 1):
             aux_position = piece.get_position()
-            position = [aux_position[0] + i, aux_position[1] + piece.player.side]
+            position = (aux_position[0] + i, aux_position[1] + piece.player.side)
             eval_mov = self._evaluate_position(position, piece)
             if eval_mov == 2:
                 piece_to_jump = self.board.get_piece(position)
