@@ -17,4 +17,4 @@ install:
   - pip install -r requirements.txt
   
 script:
-  - pytest tests/integration/movement.py
+  - pytest src/tests/integration/movement.py
