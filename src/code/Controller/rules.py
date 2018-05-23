@@ -41,8 +41,8 @@ class Rule:
             -------
             A Rule class object
         """
-        p2 = Player('b', 'blue', -1)
-        p1 = Player('r', 'red', 1)
+        p2 = Player('p2', 'blue', -1)
+        p1 = Player('p1', 'red', 1)
         self.players = tuple((p1, p2))
         self.turn_player = p1
         pieces = {}
@@ -83,8 +83,8 @@ class Rule:
         if mode == 'bot':
             p1 = Bot(args, 'ai', 'blue', -1)
         else:
-            p1 = Player('b', 'blue', -1)
-        p2 = Player('r', 'red', 1)
+            p1 = Player('p2', 'blue', -1)
+        p2 = Player('p1', 'red', 1)
 
         return (p1, p2), p2
 
@@ -518,3 +518,22 @@ class Rule:
         """
 
         return copy.deepcopy(self)
+    
+    def export_board(self, fp):
+
+        f = open(fp, 'w')
+        out_lines = ['' for i in range(len(self.board.board))]
+        for row in self.board.board:
+            i = 0 
+            for e in row:
+                if e == None:
+                    w = '0'
+                elif e.player.name == 'p2':
+                    w = '2' if e.is_draughts else '1'
+                else:
+                    w = '4' if e.is_draughts else '3'
+                out_lines[i] += '{} '.format(w)
+                i += 1
+        for line in out_lines:
+            f.write(line[:len(line)-1] + '\n')
+        f.close()
