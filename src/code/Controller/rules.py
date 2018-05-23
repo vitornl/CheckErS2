@@ -265,7 +265,7 @@ class Rule:
         #backward eating evaluation
         for i in (-1, 1):
             aux_position = piece.get_position()
-            position = (aux_position[0] + i, aux_position[1] + piece.player.side)
+            position = [aux_position[0] + i, aux_position[1] + piece.player.side]
             eval_mov = self._evaluate_position(position, piece)
             if eval_mov == 2:
                 piece_to_jump = self.board.get_piece(position)
