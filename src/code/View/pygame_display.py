@@ -158,6 +158,100 @@ class Pygame_Display:
                 print(pos)
                 return tuple(pos)
 
+    def _generate_text_object(self, text, font, center):
+        textSurface = font.render(text, True, _WHITE)
+        textRectangle = textSurface.get_rect()
+        textRectangle.center = (center)
+        return textSurface, textRectangle 
+
+    def _generate_all_main_menu_texts(self):
+        main_menu_itens = []
+        titleFont = pygame.font.Font('freesansbold.ttf',75)
+        
+        TitleSurface, TitleRectangle = self._generate_text_object("CheckErS2", titleFont, ((_width/2),(_height/7)))
+        main_menu_itens.append((TitleSurface,TitleRectangle))
+
+        optionsFont = pygame.font.Font('freesansbold.ttf',50)
+        
+        StartSurface, StartRectangle = self._generate_text_object("Iniciar", optionsFont, ((_width/2),(3*_height/7)))
+        main_menu_itens.append((StartSurface,StartRectangle))
+
+        OptionsSurface, OptionsRectangle = self._generate_text_object("Opções", optionsFont, ((_width/2),(4*_height/7)))
+        main_menu_itens.append((OptionsSurface,OptionsRectangle))
+
+        ExitSurface, ExitRectangle = self._generate_text_object("Sair", optionsFont, ((_width/2),(5*_height/7)))
+        main_menu_itens.append((ExitSurface,ExitRectangle))
+
+        return main_menu_itens
+        
+
+    def main_menu(self):
+        gameDisplay = pygame.display.set_mode(_dim)
+        all_main_menu_objects = self._generate_all_main_menu_texts()
+        StartRect = all_main_menu_objects[1][1]
+        OptionsRect = all_main_menu_objects[2][1]
+        ExitRect = all_main_menu_objects[3][1]
+        for menu_object in all_main_menu_objects:
+            textSurface = menu_object[0]
+            textRectangle = menu_object[1]
+            gameDisplay.blit(textSurface, textRectangle)
+        choosen_option = ""    
+        while(choosen_option == ""):
+            pygame.display.update()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT: return 1
+                if event.type == pygame.MOUSEBUTTONUP:
+                    mouse_position = pygame.mouse.get_pos()
+                    if StartRect.collidepoint(mouse_position):
+                        choosen_option = "start"
+                    elif OptionsRect.collidepoint(mouse_position):
+                       choosen_option = "" #Preencher quando tiver menu de opções
+                    elif ExitRect.collidepoint(mouse_position):
+                        choosen_option = "exit"
+        return choosen_option
+
+    def _generate_all_start_menu_texts(self):
+        
+        start_menu_itens = []
+
+        optionsFont = pygame.font.Font('freesansbold.ttf',50)
+        
+        TwoPlayerSurface, TwoPlayerRectangle = self._generate_text_object("2 Jogadores", optionsFont, ((_width/2),(3*_height/7)))
+        start_menu_itens.append((TwoPlayerSurface,TwoPlayerRectangle))
+
+        VsComputerSurface, VsComputerRectangle = self._generate_text_object("vs Computador", optionsFont, ((_width/2),(4*_height/7)))
+        start_menu_itens.append((VsComputerSurface,VsComputerRectangle))
+
+        BackSurface, BackRectangle = self._generate_text_object("Voltar", optionsFont, ((_width/2),(5*_height/7)))
+        start_menu_itens.append((BackSurface,BackRectangle))
+
+        return start_menu_itens
+
+    def start_menu(self):
+        gameDisplay = pygame.display.set_mode(_dim)
+        all_start_menu_objects = self._generate_all_start_menu_texts()
+        TwoPlayerRect = all_start_menu_objects[0][1]
+        VsComputerRect = all_start_menu_objects[1][1]
+        BackRect = all_start_menu_objects[2][1]
+        for start_object in all_start_menu_objects:
+            textSurface = start_object[0]
+            textRectangle = start_object[1]
+            gameDisplay.blit(textSurface, textRectangle)
+        choosen_option = ""    
+        while(choosen_option == ""):
+            pygame.display.update()
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONUP:
+                    mouse_position = pygame.mouse.get_pos()
+                    if TwoPlayerRect.collidepoint(mouse_position):
+                        choosen_option = "twoPlayers"
+                    elif VsComputerRect.collidepoint(mouse_position):
+                       choosen_option = "vsComputer" 
+                    elif BackRect.collidepoint(mouse_position):
+                        choosen_option = "back"
+        return choosen_option
+
+        
     def quit(self):
         """
             Turn off pygame
