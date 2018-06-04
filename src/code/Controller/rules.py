@@ -8,22 +8,64 @@ from ..Model.bot import Bot
 
 class Rule:
 
-    def __init__(self, mode, *args):
+    def __init__(self, mode, args = None):
         """
             Class builder
             
             Parameters
             ----------
             mode : game mode (2 player or bot vs. human)
-            *args : bot level ('easy', 'normal', 'hard')
+            args : bot level ('easy', 'normal', 'hard') or a file
 
             Returns
             -------
             A Rule class object
         """
         self.board = Board()
-        self.players, self.turn_player = self._set_players(mode, args)
-        self._init_board(self.board, self.players)      
+        if mode == 'file':
+            self._load_file(args)
+        else:
+            self.players, self.turn_player = self._set_players(mode, args)
+            self._init_board(self.board, self.players)
+
+    def _load_file(self, fp):
+        """
+            Class builder
+            
+            Parameters
+            ----------
+            file: the board in a file, 0 for empty, 1 and 2 for turn_player, 3 and 4 for other player,
+            2 and 4 are draughts
+
+            Returns
+            -------
+            A Rule class object
+        """
+        p2 = Player('p2', 'blue', -1)
+        p1 = Player('p1', 'red', 1)
+        self.players = tuple((p1, p2))
+        self.turn_player = p1
+        pieces = {}
+        pieces[p1] = []
+        pieces[p2] = []
+        for i in range(8):
+            aux = fp.readline()
+            line = aux.split(' ')
+            for j in range(8):
+                elem = int(line[j])
+                if elem == 0:
+                    continue
+                piece = None
+                if elem < 3:
+                    piece = Piece(p1)
+                else:
+                    piece = Piece(p2)
+                self.board.add_piece(piece, (j, i))
+                pieces[piece.player].append(piece)
+                if elem%2 == 0:
+                    piece.turn_draughts()
+        for player in pieces:
+            player.set_pieces(pieces[player])
 
     def _set_players(self, mode, *args):
         """
@@ -39,10 +81,10 @@ class Rule:
             The created players and the first player that is going to play
         """
         if mode == 'bot':
-            p1 = Bot(args[0][0], 'ai', 'blue', -1)
+            p1 = Bot(args, 'ai', 'blue', -1)
         else:
-            p1 = Player('b', 'blue', -1)
-        p2 = Player('r', 'red', 1)
+            p1 = Player('p2', 'blue', -1)
+        p2 = Player('p1', 'red', 1)
 
         return (p1, p2), p2
 
@@ -476,3 +518,22 @@ class Rule:
         """
 
         return copy.deepcopy(self)
+    
+    def export_board(self, fp):
+
+        f = open(fp, 'w')
+        out_lines = ['' for i in range(len(self.board.board))]
+        for row in self.board.board:
+            i = 0 
+            for e in row:
+                if e == None:
+                    w = '0'
+                elif e.player.name == 'p2':
+                    w = '2' if e.is_draughts else '1'
+                else:
+                    w = '4' if e.is_draughts else '3'
+                out_lines[i] += '{} '.format(w)
+                i += 1
+        for line in out_lines:
+            f.write(line[:len(line)-1] + '\n')
+        f.close()

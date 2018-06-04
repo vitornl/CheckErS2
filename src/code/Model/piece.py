@@ -50,4 +50,4 @@ class Piece:
             ----------
             position: position of where the piece is in the board
         """
-        self.position = position
+        self.position = tuple(position)
