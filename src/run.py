@@ -112,33 +112,38 @@ def _game_loop(rules, display):
         print("Jogador {} ganhou!".format(end_game[1].name))
     
 def main():
-    if not ((len(sys.argv) == 3) or  (len(sys.argv) == 4)):
+    if len(sys.argv) < 2 :
         print("Invalid Input")
         return
 
     display = None
-
     rules = None
-
-    if sys.argv[2] == "human":
-        rules = Rule('human')
-    elif sys.argv[2] == "bot":
-        rules = Rule('bot', 'easy')
-    elif sys.argv[2] == "file":
-        fp = open(sys.argv[3])
-        rules = Rule("file", fp)
-        fp.close()
-    else:
-        exit(1)
-
+    
     if sys.argv[1] == "pygame":
         display = Pygame_Display()
+        while(rules == None):
+            main_menu_option_choosen = display.main_menu()
+            if main_menu_option_choosen == "start":
+                start_menu_option_choosen = display.start_menu()
+                if start_menu_option_choosen == "twoPlayers": rules = Rule('human')
+                elif start_menu_option_choosen == "vsComputer": rules = Rule('bot','easy')
+                
+            elif main_menu_option_choosen == "exit":
+                display.quit()
+                return
+
     elif sys.argv[1] == "console":
         display = Console_Display()
+        if sys.argv[2] == "human":
+            rules = Rule('human')
+        elif sys.argv[2] == "bot":
+            rules = Rule('bot', 'easy')
+        else:
+            exit(1)
     else:
         exit(1)
 
-    _game_loop(rules, display)
+   _game_loop(rules, display)
 
 if __name__ == "__main__":
     main()
