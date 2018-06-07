@@ -1,9 +1,9 @@
 # coding=utf-8
 import sys
 
-from code.Controller.rules import Rule
-from code.View.pygame_display import Pygame_Display
-from code.View.console_display import Console_Display
+from mvc.Controller.rules import Rule
+from mvc.View.pygame_display import Pygame_Display
+from mvc.View.console_display import Console_Display
 
 def _human_play(rules, display, possibilities):
     """
@@ -143,7 +143,7 @@ def main():
     else:
         exit(1)
 
-   _game_loop(rules, display)
+    _game_loop(rules, display)
 
 if __name__ == "__main__":
     main()
