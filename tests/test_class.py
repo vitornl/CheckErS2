@@ -83,7 +83,7 @@ class TestClass(object):
     def test_movement_get_piece(self):
         piece = Piece("p1")
         mov = Movement(piece, (0, 0))
-        assert mov.piece == piece
+        assert mov.get_piece() == piece
 
     def test_movement_destiny(self):
         added_destiny = (3, 3)
