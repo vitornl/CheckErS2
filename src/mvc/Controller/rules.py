@@ -41,8 +41,8 @@ class Rule:
             -------
             A Rule class object
         """
-        p2 = Player('p2', 'blue', -1)
-        p1 = Player('p1', 'red', 1)
+        p1 = Player('ai', 'blue', -1)
+        p2 = Player('p1', 'red', 1)
         self.players = tuple((p1, p2))
         self.turn_player = p1
         pieces = {}

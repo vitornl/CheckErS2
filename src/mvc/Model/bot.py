@@ -36,8 +36,8 @@ class Bot(Player):
     def _minmax(self, rules, alpha, beta, depth, possibilities):
         #preciso de acesso ao fim do jogo
         if depth == self.max_depth or rules.end_game(possibilities)[0]:
-            return self._utilty(rules)
-
+            return self._utility(rules)
+        print(rules.turn_player.name)
         if rules.turn_player.name == 'ai':
             value = np.iinfo(np.int32).min
             #preciso das possíveis jogadas da ai
@@ -127,6 +127,6 @@ class Bot(Player):
             
             return value
    
-    def _utilty(self, rules):
+    def _utility(self, rules):
         #preciso de acesso às peças do inimigo
         return len(self.pieces) - len(rules.players[1].pieces)

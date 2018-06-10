@@ -1,7 +1,7 @@
 from src.mvc.Controller.rules import Rule
 from unittest.mock import Mock, MagicMock, patch
-
-
+import pytest
+import mock
 
 class TestController:
 # Testes do Controller
@@ -15,7 +15,7 @@ class TestController:
         assert load_file_mock.call_count == 1
 
     def test_rules_load_file(self):
-        file_name = "tests/tabuleiro_inicial.txt"
+        file_name = "../src/tests/tabuleiro_inicial.txt"
         file = open(file_name, "w")
         contentLine = "0 0 0 0 0 0 0 0\n"
         for i in range(8):
