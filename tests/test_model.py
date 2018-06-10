@@ -4,7 +4,7 @@ from src.mvc.Model.player import Player
 from src.mvc.Model.movement import Movement
 
 
-class TestClass(object):
+class TestModel(object):
 
     # Testes do Modelo
     def test_piece_turn_draughts(self):
