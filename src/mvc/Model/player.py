@@ -49,8 +49,6 @@ class Player:
         """
         self.pieces.remove(piece)
 
-          self.pieces.remove(piece)
-
     def get_qty_draughts(self):
         qty = 0
         for piece in self.pieces:
