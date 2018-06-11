@@ -76,6 +76,4 @@ class TestController:
         assert rules._evaluate_position((1, 0), rules.players[0].pieces[0]) == 0
         assert rules._evaluate_position((0, 5), rules.players[0].pieces[0]) == 2
 
-    def test_rules_build_eating_path(self):
-
 
