@@ -1,7 +1,7 @@
 import pytest
 
 class Movement(object):
-    def simple_move(self):
+    def test_simple_move(self):
         x = 'test'
         assert 'test' in x
 
