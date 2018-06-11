@@ -10,6 +10,7 @@ class Bot(Player):
         super().__init__(name, color, side)
         self.max_depth = self._set_mode(mode)
         self.next_move = None #jogada a ser feita
+        print(self.max_depth)
 
     def execute(self, rules, possibilities):
         #preciso acessa uma cópia das regras para fazer as simulações
@@ -37,7 +38,6 @@ class Bot(Player):
         #preciso de acesso ao fim do jogo
         if depth == self.max_depth or rules.end_game(possibilities)[0]:
             return self._utility(rules)
-        print(rules.turn_player.name)
         if rules.turn_player.name == 'ai':
             value = np.iinfo(np.int32).min
             #preciso das possíveis jogadas da ai
@@ -129,4 +129,13 @@ class Bot(Player):
    
     def _utility(self, rules):
         #preciso de acesso às peças do inimigo
-        return len(self.pieces) - len(rules.players[1].pieces)
+        human_player, ai_player = rules.players[1], rules.players[0]
+        for player in rules.players:
+            if player.name == 'p1':
+                human_player = player
+            elif player.name == 'ai':
+                ai_player == player
+        
+        value = len(ai_player.pieces) - len(human_player.pieces)
+        value += 0.5*(ai_player.get_qty_draughts() - human_player.get_qty_draughts())
+        return value

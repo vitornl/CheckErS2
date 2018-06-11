@@ -205,4 +205,4 @@ class TestModel(object):
 
         rules.turn_player = rules.players[0]
         
-        assert bot.execute(rules, possibilities).get_movement() == (1,6)
+        assert bot.execute(rules, possibilities).get_movement() == (5,6)
