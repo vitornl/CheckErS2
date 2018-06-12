@@ -2,9 +2,14 @@ from src.mvc.Model.board import Board
 from src.mvc.Model.piece import Piece
 from src.mvc.Model.player import Player
 from src.mvc.Model.movement import Movement
+from src.mvc.Model.bot import Bot
+from src.mvc.Controller.rules import Rule
+from unittest.mock import Mock, MagicMock, patch
+import numpy as np
 
-class TestClass(object):
+class TestModel(object):
 
+    # Testes do Modelo
     def test_piece_turn_draughts(self):
         piece = Piece("p1")
         piece.turn_draughts()
@@ -83,7 +88,7 @@ class TestClass(object):
     def test_movement_get_piece(self):
         piece = Piece("p1")
         mov = Movement(piece, (0, 0))
-        assert mov.piece == piece
+        assert mov.get_piece() == piece
 
     def test_movement_destiny(self):
         added_destiny = (3, 3)
@@ -153,5 +158,51 @@ class TestClass(object):
         mov_copy = mov.copy_movement()
         assert mov.piece == mov_copy.piece and mov.destiny == mov_copy.destiny and mov.eliminated == mov_copy.eliminated
 
+    def test_bot_set_mode(self):
+        bot_easy = Bot("easy")
+        assert bot_easy.max_depth == 2
+        bot_normal = Bot("normal")
+        assert bot_normal.max_depth == 4
+        bot_hard = Bot("hard")
+        assert bot_hard.max_depth == 6
 
+    def test_bot_utility(self):
+        bot = Bot("")
+ 
+        contentLine = "0 0 0 0 0 0 0 0\n"
+        file = open("tabuleiro_inicial", "w")
+        contentWithPieces = "1 0 2 0 3 0 4 0\n"
+        file.write(contentWithPieces)
 
+        for i in range(7):
+            file.write(contentLine)
+ 
+        file.close()
+        rules = Rule(file)
+        bot.set_pieces(rules.players[0].pieces)
+        assert bot._utility(rules) == 0
+
+    def test_bot_execute(self):
+        bot = Bot('normal')
+        
+        file = open("tabuleiro_inicial", "w")
+        file.write("0 0 0 0 0 0 0 0\n")
+        file.write("0 0 0 0 0 0 0 0\n")
+        file.write("0 0 0 0 0 0 0 0\n")
+        file.write("0 0 0 0 0 0 0 0\n")
+        file.write("0 0 0 1 0 0 0 0\n")
+        file.write("0 0 3 0 3 0 0 0\n")
+        file.write("0 0 0 0 0 0 0 0\n")
+        file.write("3 0 0 0 0 0 0 0\n")
+        file.close()
+
+        file = open("tabuleiro_inicial", "r")
+        rules = Rule('file', file)
+        file.close()
+
+        bot.set_pieces(rules.players[0].pieces)
+        possibilities = rules.get_all_possible_moves(rules.players[0])
+
+        rules.turn_player = rules.players[0]
+        
+        assert bot.execute(rules, possibilities).get_movement() == (5,6)
