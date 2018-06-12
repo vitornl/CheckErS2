@@ -81,7 +81,7 @@ class Rule:
             The created players and the first player that is going to play
         """
         if mode == 'bot':
-            p1 = Bot(args, 'ai', 'blue', -1)
+            p1 = Bot(args[0], 'ai', 'blue', -1)
         else:
             p1 = Player('p2', 'blue', -1)
         p2 = Player('p1', 'red', 1)
