@@ -126,7 +126,7 @@ def main():
             if main_menu_option_choosen == "start":
                 start_menu_option_choosen = display.start_menu()
                 if start_menu_option_choosen == "twoPlayers": rules = Rule('human')
-                elif start_menu_option_choosen == "vsComputer": rules = Rule('bot','normal')
+                elif start_menu_option_choosen == "vsComputer": rules = Rule('bot','easy')
                 
             elif main_menu_option_choosen == "exit":
                 display.quit()
@@ -137,12 +137,11 @@ def main():
         if sys.argv[2] == "human":
             rules = Rule('human')
         elif sys.argv[2] == "bot":
-            rules = Rule('bot', 'hard')
+            rules = Rule('bot', 'easy')
         else:
             exit(1)
     else:
         exit(1)
-
 
     _game_loop(rules, display)
 
