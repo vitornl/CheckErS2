@@ -126,7 +126,7 @@ def main():
             if main_menu_option_choosen == "start":
                 start_menu_option_choosen = display.start_menu()
                 if start_menu_option_choosen == "twoPlayers": rules = Rule('human')
-                elif start_menu_option_choosen == "vsComputer": rules = Rule('bot','easy')
+                elif start_menu_option_choosen == "vsComputer": rules = Rule('bot','hard')
                 
             elif main_menu_option_choosen == "exit":
                 display.quit()
